@@ -93,12 +93,15 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
+with open('src/Test_program.txt', 'r') as file:
+    data = file.read() 
+
 # Example usage
-data = '''
-while (x < 10) {
-    print(x);
-}
-'''
+# data = '''
+# while (x < 10) {
+#     print(x);
+# }
+# '''
 lexer.input(data)
 while True:
     tok = lexer.token()
