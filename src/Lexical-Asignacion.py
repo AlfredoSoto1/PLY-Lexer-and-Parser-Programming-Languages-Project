@@ -6,7 +6,17 @@
 # elements inside the test program provided as a text file
 
 # import ply lexer
-from ply import lex
+import ply.lex as lex
+
+# List of keywords
+keywords = {
+    'print': 'PRINT',
+    'while': 'WHILE',
+    'if': 'IF',
+    'else': 'ELSE',
+    'int': 'INT_TYPE',
+    'double': 'DOUBLE_TYPE',
+}
 
 # Declaration of the assigned tokens
 # for lexer from ply to use when scanning the code
@@ -40,7 +50,7 @@ tokens = [
     'DIV',      # /
     'CM',       # ,
     'S'         # ;
-]
+] + list(keywords.values())
 
 # Single-character tokens
 t_RO = r'\('
@@ -65,6 +75,28 @@ t_CM = r','
 t_S = r';'
 
 # Regular expression rules
+t_ignore = ' \t\r'  # Ignore space, tab, and carriage return
+
+def t_COMMENT(t):
+    r'//[^\\n]*'
+    pass  # Ignore comments
+
+def t_WHITESPACE(t):
+    r'\n'
+    pass  # Newlines are ignored
+
+def t_ID(t):
+    r'[a-zA-Z][a-zA-Z0-9]*'
+    t.type = keywords.get(t.value, 'ID')  # Check if it's a keyword
+    return t
+
+def t_DOUBLE(t):
+    r'-?\d+\.\d+([Ee][+-]?\d+)?'
+    return t
+
+def t_INT(t):
+    r'-?[1-9]\d*|0'
+    return t
 
 # Build the lexer
 lexer = lex.lex()
