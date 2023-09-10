@@ -103,15 +103,13 @@ lexer = lex.lex()
 
 # Create the scanner machine (lexer) to tokenize
 # the given input program file (Test_program.txt)
-# source_file = open('Test_program.txt', 'r')
+with open('src/Test_program.txt', 'r') as source_file:
+    # Obtain the source code from source file
+    source_code = source_file.read() 
 
-# Obtain the source code from source file
-
-# source_code = source_file.read()
-
-source_code = '''
-int variable = 10;
-'''
+# source_code = '''
+# int variable = 10;
+# '''
 
 # Feed the lexer with the source code
 lexer.input(source_code)
