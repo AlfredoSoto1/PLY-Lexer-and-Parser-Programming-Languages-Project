@@ -26,6 +26,7 @@ tokens = [
     'DOUBLE',      # consists of: double-precision representation
     'COMMENT',     # consists of: [//][ascii | \n]
     'WHITESPACE',  # consists of: [ascii9 | \t] | [ascii10 | \n] | [ascii13 | \r] | [ascii32 | spcace]
+    'NEWLINE',     # consists of: [\n]+
     
     # Delimeters represented in string
     'RO',          # (
@@ -53,6 +54,7 @@ tokens = [
 ] + list(keywords.values())
 
 # Single-character tokens
+# Regular expression rules
 t_RO = r'\('
 t_RC = r'\)'
 t_BO = r'\{'
@@ -74,16 +76,18 @@ t_DIV = r'/'
 t_CM = r','
 t_S = r';'
 
-# Regular expression rules
-t_ignore = ' \t\r'  # Ignore space, tab, and carriage return
-
 def t_COMMENT(t):
     r'//[^\\n]*'
     pass  # Ignore comments
 
 def t_WHITESPACE(t):
-    r'\n'
+    r'[ \t\r]+'
     pass  # Newlines are ignored
+
+def t_NEWLINE(t):
+    r'[\n]+'
+    t.lexer.lineno += len(t.value)
+    pass
 
 def t_ID(t):
     r'[a-zA-Z][a-zA-Z0-9]*'
@@ -97,6 +101,10 @@ def t_DOUBLE(t):
 def t_INT(t):
     r'-?[1-9]\d*|0'
     return t
+
+# Error handling
+def t_error(t):
+    pass
 
 # Build the lexer
 lexer = lex.lex()
@@ -119,5 +127,6 @@ while True:
 
     if not token:
         break
-    
-    print(token)
+    print(token.type, token.value, token.lineno)
+    # print(token.type, token.value, token.lineno, token.lexpos)
+    # print(token)
