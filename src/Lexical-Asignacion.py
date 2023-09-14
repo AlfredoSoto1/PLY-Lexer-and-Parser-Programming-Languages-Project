@@ -9,20 +9,20 @@
 import ply.lex as lex
 
 # List of keywords
-keywords = {
-    'print': 'PRINT',
-    'while': 'WHILE',
-    'if': 'IF',
-    'else': 'ELSE',
-    'int': 'INT_TYPE',
+defined_keywords = {
+    'print' : 'PRINT',
+    'while' : 'WHILE',
+    'if'    : 'IF',
+    'else'  : 'ELSE',
+    'int'   : 'INT_TYPE',
     'double': 'DOUBLE_TYPE',
 }
 
 # Declaration of the assigned tokens
 # for lexer from ply to use when scanning the code
 tokens = [
-    'ID',          # consists of: [a-z|A-Z]+[0-9]+
-    'INT',         # consists of: [1-9]+[0-9]+
+    'ID',          # consists of: [a-zA-Z][a-zA-Z0-9]*
+    'INT',         # consists of: [1-9][0-9]*
     'DOUBLE',      # consists of: double-precision representation
     'COMMENT',     # consists of: [//][ascii | \n]
     'WHITESPACE',  # consists of: [ascii9 | \t] | [ascii10 | \n] | [ascii13 | \r] | [ascii32 | spcace]
@@ -51,7 +51,7 @@ tokens = [
     'DIV',      # /
     'CM',       # ,
     'S'         # ;
-] + list(keywords.values())
+] + list(defined_keywords.values())
 
 # Single-character tokens
 # Regular expression rules
@@ -77,21 +77,22 @@ t_CM = r','
 t_S = r';'
 
 def t_COMMENT(t):
-    r'//[^\\n]*'
-    pass  # Ignore comments
+    r'//[^\\n]*' # Ignore comments
+    pass
 
 def t_WHITESPACE(t):
-    r'[ \t\r]+'
-    pass  # Newlines are ignored
+    r'[ \t\r]+' # ignore spaces, tabs and carriage
+    pass
 
 def t_NEWLINE(t):
     r'[\n]+'
+    # calculate line number
     t.lexer.lineno += len(t.value)
     pass
 
 def t_ID(t):
     r'[a-zA-Z][a-zA-Z0-9]*'
-    t.type = keywords.get(t.value, 'ID')  # Check if it's a keyword
+    t.type = defined_keywords.get(t.value, 'ID')  # Check if it's a keyword
     return t
 
 def t_DOUBLE(t):
