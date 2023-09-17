@@ -22,10 +22,10 @@ defined_keywords = {
 # for lexer from ply to use when scanning the code
 tokens = [
     'ID',          # consists of: [a-zA-Z][a-zA-Z0-9]*
-    'INT',         # consists of: [1-9][0-9]*
-    'DOUBLE',      # consists of: double-precision representation
-    'COMMENT',     # consists of: [//][ascii | \n]
-    'WHITESPACE',  # consists of: [ascii9 | \t] | [ascii10 | \n] | [ascii13 | \r] | [ascii32 | spcace]
+    'INT',         # consists of: -?[1-9][0-9]*
+    'DOUBLE',      # consists of: -?[0-9]+(\.[0-9]+)?([Ee][+-]?[0-9]+)?
+    'COMMENT',     # consists of: //[.*]\n
+    'WHITESPACE',  # consists of: [ \t\r]+
     'NEWLINE',     # consists of: [\n]+
     
     # Delimeters represented in string
@@ -64,20 +64,20 @@ t_SC = r'\]'
 t_EQ = r'='
 t_NOT = r'!'
 t_OR = r'\|'
-t_AND = r'&'
+t_AND = r'\&'
 t_MIN = r'<'
 t_MAJ = r'>'
 t_MIN_EQ = r'<='
 t_MAJ_EQ = r'>='
 t_PLUS = r'\+'
-t_MINUS = r'-'
+t_MINUS = r'\-'
 t_STAR = r'\*'
 t_DIV = r'/'
 t_CM = r','
 t_S = r';'
 
 def t_COMMENT(t):
-    r'//[^\\n]*' # Ignore comments
+    r'//.*\n' # Ignore comments
     pass
 
 def t_WHITESPACE(t):
@@ -96,11 +96,11 @@ def t_ID(t):
     return t
 
 def t_DOUBLE(t):
-    r'-?\d+\.\d+([Ee][+-]?\d+)?'
+    r'-?[0-9]+(\.[0-9]+)?([Ee][+-]?[0-9]+)?'
     return t
 
 def t_INT(t):
-    r'-?[1-9]\d*|0'
+    r'-?[1-9][0-9]*'
     return t
 
 # Error handling
@@ -128,6 +128,6 @@ while True:
 
     if not token:
         break
-    print(token.type, token.value, token.lineno)
+    print('Line ', token.lineno, token.type, token.value)
     # print(token.type, token.value, token.lineno, token.lexpos)
     # print(token)
