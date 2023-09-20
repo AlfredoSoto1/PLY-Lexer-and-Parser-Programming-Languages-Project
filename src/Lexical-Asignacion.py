@@ -92,7 +92,8 @@ def t_NEWLINE(t):
 
 def t_ID(t):
     r'[a-zA-Z][a-zA-Z0-9]*'
-    t.type = defined_keywords.get(t.value, 'ID')  # Check if it's a keyword
+    # Check if it's a keyword
+    t.type = defined_keywords.get(t.value, 'ID')  
     return t
 
 def t_DOUBLE(t):
@@ -116,10 +117,6 @@ with open('src/Test_program.txt', 'r') as source_file:
     # Obtain the source code from source file
     source_code = source_file.read() 
 
-# source_code = '''
-# int variable = 10;
-# '''
-
 # Feed the lexer with the source code
 lexer.input(source_code)
 
@@ -128,6 +125,6 @@ while True:
 
     if not token:
         break
-    print('Line ', token.lineno, token.type, token.value)
+    print('Line->', token.lineno, token.type, token.value)
     # print(token.type, token.value, token.lineno, token.lexpos)
     # print(token)
