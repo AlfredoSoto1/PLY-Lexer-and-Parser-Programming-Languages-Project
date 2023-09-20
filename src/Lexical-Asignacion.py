@@ -125,8 +125,6 @@ while True:
 
     if not token:
         break
-
-    
-    # print('Line->', token.lineno, token.type, token.value)
+    print('Line->', token.lineno, token.type, token.value)
     # print(token.type, token.value, token.lineno, token.lexpos)
     # print(token)
