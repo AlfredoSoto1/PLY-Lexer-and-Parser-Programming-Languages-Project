@@ -14,6 +14,13 @@ with open('src/Test_program.txt', 'r') as source_file:
     # Obtain the source code from source file
     source_code = source_file.read() 
 
+source_code = """
+    int a;
+    if (2 < 10) {
+        a = 110;
+    }
+"""
+
 # --- Lexer machine parameters implementation ---
 
 # List of keywords
@@ -119,119 +126,6 @@ def t_error(t):
 # Build the lexer
 lexer = ply_lexer.lex()
 
-# --- Parser machine implementation ---
-
-# def p_expression_plus(p):
-#     'expression : expression PLUS term'
-#     p[0] = p[1] + p[3]
-
-# def p_expression_minus(p):
-#     'expression : expression MINUS term'
-#     p[0] = p[1] - p[3]
-
-# def p_expression_term(p):
-#     'expression : term'
-#     p[0] = p[1]
-
-# def p_term_times(p):
-#     'term : term STAR factor'
-#     p[0] = p[1] * p[3]
-
-# def p_term_div(p):
-#     'term : term DIV factor'
-#     p[0] = p[1] / p[3]
-
-# def p_term_factor(p):
-#     'term : factor'
-#     p[0] = p[1]
-
-# def p_factor_num(p):
-#     '''factor : INT
-#               | DOUBLE
-#     '''
-#     p[0] = p[1]
-
-# def p_factor_expr(p):
-#     'factor : RO expression RC'
-#     p[0] = p[2]
-
-# # Error rule for syntax errors
-# def p_error(p):
-#     print("Syntax error in input!")
-
-# # Build the parser
-# parser = ply_parser.yacc()
-
-# while True:
-#    try:
-#        s = input(source_code)
-#    except EOFError:
-#        break
-#    if not s: continue
-#    result = parser.parse(s)
-#    print(result)
-
-# Define the parsing rules using PLY
-precedence = (
-    ('left', 'AND', 'OR'),
-    ('nonassoc', 'EQ_EQ', 'MIN', 'MAJ', 'MIN_EQ', 'MAJ_EQ', 'EQ_MIN', 'EQ_MAJ'),
-    ('left', 'PLUS', 'MINUS'),
-    ('left', 'STAR', 'DIV'),
-    ('right', 'NOT'),
-    ('left', 'RO', 'RC'),
-)
-
-def p_prog(p):
-    '''
-    prog : decl_list stmt_list
-    '''
-    # Define the action for prog
-    p[0] = ('prog', p[1], p[2])
-
-def p_decl_list_empty(p):
-    '''
-    decl_list : empty
-    '''
-    # Define the action for an empty decl_list
-    p[0] = []
-
-def p_decl_list_decl(p):
-    '''
-    decl_list : decl_list decl
-    '''
-    # Define the action for decl_list with decl
-    p[0] = p[1] + [p[2]]
-
-def p_decl(p):
-    '''
-    decl : type var_list S
-    '''
-    # Define the action for decl
-    p[0] = ('decl', p[1], p[2])
-
-def p_type(p):
-    '''
-    type : INT_TYPE
-         | DOUBLE_TYPE
-    '''
-    # Define the action for type
-    p[0] = ('type', p[1])
-
-# Error rule for syntax errors
-def p_error(p):
-    print("Syntax error in input!")
-
-# Build the parser
-parser = ply_parser.yacc()
-
-# Parse the source code
-result = parser.parse(source_code)
-
-# Print the parse tree
-print(result)
-
-# Run & test lexical & parser machines
-
 # Feed the lexer with the source code
 lexer.input(source_code)
 
@@ -243,3 +137,112 @@ while True:
     print('Line->', token.lineno, token.type, token.value)
     # print(token.type, token.value, token.lineno, token.lexpos)
     # print(token)
+
+
+# --- Parser machine implementation ---
+
+# precedence = (
+#    ('left', 'PLUS', 'MINUS'),
+#    ('left', 'STAR', 'DIV'),
+# )
+
+def p_prog(p):
+    '''prog : decl_list stmt_list'''
+    pass
+
+def p_decl_list(p):
+    '''decl_list : empty
+        | decl_list decl
+    '''
+    pass
+
+def p_empty(p):
+    'empty :'
+    pass
+
+def p_decl(p):
+    '''decl : type var_list S'''
+    pass
+
+def p_stmt_list(p):
+    '''stmt_list : stmt_list stmt
+        | stmt
+    '''
+    pass
+
+def p_stmt(p):
+    '''stmt : IF
+        | WHILE
+        | assignment
+        | PRINT
+        | BO stmt_list BC
+    '''
+    pass
+
+def p_assignment(p):
+    '''assignment : id S
+        | id EQ exp S
+    '''
+    pass
+
+def p_type(p):
+    '''type : INT_TYPE
+        | DOUBLE_TYPE
+    '''
+    pass
+
+def p_var_list(p):
+    '''var_list : var
+        | var_list CM var
+    '''
+    pass
+
+def p_var(p):
+    '''var : ID array'''
+    pass
+
+def p_array(p):
+    '''array : empty
+        | array SO INT SC
+    '''
+    pass
+
+def p_id(p):
+    '''id : ID
+        | ID SO INT SC
+        | ID SO ID SC
+    '''
+    pass
+
+def p_exp(p):
+    '''exp : exp AND exp
+        | exp OR exp
+        | NOT exp
+        | exp EQ EQ exp
+        | exp MIN exp
+        | exp MAJ exp
+        | exp MAJ_EQ exp
+        | exp MIN_EQ exp
+        | exp PLUS exp
+        | exp MINUS exp
+        | exp STAR exp
+        | exp DIV exp
+        | RO exp RC
+        | id
+        | INT
+        | DOUBLE
+    '''
+    pass
+
+def p_error(p):
+    print(f"Syntax error at line {p.lineno}, position {p.lexpos}, token {p.type}")
+    # print("Syntax error somewhere")
+
+# Build the parser
+parser = ply_parser.yacc()
+
+# Parse the source code
+result = parser.parse(source_code)
+
+# Print the parse tree
+print(result)
