@@ -15,10 +15,9 @@ with open('src/Test_program.txt', 'r') as source_file:
     source_code = source_file.read() 
 
 source_code = """
-    int a;
-    if (2 < 10) {
-        a = 110;
-    }
+    int b[1];
+    b[0] = 1.0;
+
 """
 
 # --- Lexer machine parameters implementation ---
@@ -111,12 +110,17 @@ def t_ID(t):
     t.type = defined_keywords.get(t.value, 'ID')  
     return t
 
-def t_DOUBLE(t):
-    r'-?[0-9]+(\.[0-9]+)?([Ee][+-]?[0-9]+)?'
+def t_INT(t):
+    r'-?\d+'
+    # r'-?[0-9]+'
+    t.value = int(t.value)
     return t
 
-def t_INT(t):
-    r'-?[1-9][0-9]*'
+def t_DOUBLE(t):
+    # r'-?\d*\.\d+'
+    r'-?[0-9]+\.([0-9]+)?'
+    # r'^-?\d*(?:\.\d+)?$'
+    # r'-?[0-9]+(\.[0-9]+)?([Ee][+-]?[0-9]+)?'
     return t
 
 # Error handling
@@ -174,7 +178,7 @@ def p_stmt(p):
     '''stmt : IF
         | WHILE
         | assignment
-        | PRINT
+        | PRINT exp S
         | BO stmt_list BC
     '''
     pass
