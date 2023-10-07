@@ -15,9 +15,39 @@ with open('src/Test_program.txt', 'r') as source_file:
     source_code = source_file.read() 
 
 source_code = """
-    int b[1];
-    b[0] = 1.0;
+double x[5];
+int i, j;
+double swap;
+int pos;
 
+// Bubble sort
+pos = 5;
+while (pos > 0) {
+  i = 0;
+  while (i < pos - 1){
+    j = i + 1;
+    if (x[i] > x[j]){
+      swap = x[j];
+      x[j] = x[i];
+      x[i] = swap;
+    }
+    i = i + 1;
+  }
+  pos = pos -1;
+}
+
+// if ( pos > 0) {
+//   x[0] = 3.4;
+// } else {
+//   x[0] = 3.7;
+// }
+
+// Print Results
+ // i = 0;
+ // while(i<5){
+ // print x[i];
+ // i = i + 1;
+ // }
 """
 
 # --- Lexer machine parameters implementation ---
@@ -110,17 +140,13 @@ def t_ID(t):
     t.type = defined_keywords.get(t.value, 'ID')  
     return t
 
-def t_INT(t):
-    r'-?\d+'
-    # r'-?[0-9]+'
-    t.value = int(t.value)
+def t_DOUBLE(t):
+    r'-?[0-9]+\.([0-9]+)?'
     return t
 
-def t_DOUBLE(t):
-    # r'-?\d*\.\d+'
-    r'-?[0-9]+\.([0-9]+)?'
-    # r'^-?\d*(?:\.\d+)?$'
-    # r'-?[0-9]+(\.[0-9]+)?([Ee][+-]?[0-9]+)?'
+def t_INT(t):
+    r'-?[0-9]+'
+    t.value = int(t.value)
     return t
 
 # Error handling
@@ -145,10 +171,10 @@ while True:
 
 # --- Parser machine implementation ---
 
-# precedence = (
-#    ('left', 'PLUS', 'MINUS'),
-#    ('left', 'STAR', 'DIV'),
-# )
+precedence = (
+   ('left', 'PLUS', 'MINUS'),
+   ('left', 'STAR', 'DIV'),
+)
 
 def p_prog(p):
     '''prog : decl_list stmt_list'''
@@ -175,8 +201,9 @@ def p_stmt_list(p):
     pass
 
 def p_stmt(p):
-    '''stmt : IF
-        | WHILE
+    '''stmt : IF RO exp RC stmt
+        | ELSE stmt
+        | WHILE RO exp RC stmt
         | assignment
         | PRINT exp S
         | BO stmt_list BC

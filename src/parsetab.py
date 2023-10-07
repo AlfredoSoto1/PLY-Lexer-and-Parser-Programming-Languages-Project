@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AND BC BO CM COMMENT DIV DOUBLE DOUBLE_TYPE ELSE EQ ID IF INT INT_TYPE MAJ MAJ_EQ MIN MINUS MIN_EQ NEWLINE NOT OR PLUS PRINT RC RO S SC SO STAR WHILE WHITESPACEprog : decl_list stmt_listdecl_list : empty\n        | decl_list decl\n    empty :decl : type var_list Sstmt_list : stmt_list stmt\n        | stmt\n    stmt : IF\n        | WHILE\n        | assignment\n        | PRINT exp S\n        | BO stmt_list BC\n    assignment : id S\n        | id EQ exp S\n    type : INT_TYPE\n        | DOUBLE_TYPE\n    var_list : var\n        | var_list CM var\n    var : ID arrayarray : empty\n        | array SO INT SC\n    id : ID\n        | ID SO INT SC\n        | ID SO ID SC\n    exp : exp AND exp\n        | exp OR exp\n        | NOT exp\n        | exp EQ EQ exp\n        | exp MIN exp\n        | exp MAJ exp\n        | exp MAJ_EQ exp\n        | exp MIN_EQ exp\n        | exp PLUS exp\n        | exp MINUS exp\n        | exp STAR exp\n        | exp DIV exp\n        | RO exp RC\n        | id\n        | INT\n        | DOUBLE\n    '
+_lr_signature = 'leftPLUSMINUSleftSTARDIVAND BC BO CM COMMENT DIV DOUBLE DOUBLE_TYPE ELSE EQ ID IF INT INT_TYPE MAJ MAJ_EQ MIN MINUS MIN_EQ NEWLINE NOT OR PLUS PRINT RC RO S SC SO STAR WHILE WHITESPACEprog : decl_list stmt_listdecl_list : empty\n        | decl_list decl\n    empty :decl : type var_list Sstmt_list : stmt_list stmt\n        | stmt\n    stmt : IF RO exp RC stmt\n        | ELSE stmt\n        | WHILE RO exp RC stmt\n        | assignment\n        | PRINT exp S\n        | BO stmt_list BC\n    assignment : id S\n        | id EQ exp S\n    type : INT_TYPE\n        | DOUBLE_TYPE\n    var_list : var\n        | var_list CM var\n    var : ID arrayarray : empty\n        | array SO INT SC\n    id : ID\n        | ID SO INT SC\n        | ID SO ID SC\n    exp : exp AND exp\n        | exp OR exp\n        | NOT exp\n        | exp EQ EQ exp\n        | exp MIN exp\n        | exp MAJ exp\n        | exp MAJ_EQ exp\n        | exp MIN_EQ exp\n        | exp PLUS exp\n        | exp MINUS exp\n        | exp STAR exp\n        | exp DIV exp\n        | RO exp RC\n        | id\n        | INT\n        | DOUBLE\n    '
     
-_lr_action_items = {'IF':([0,2,3,4,5,6,8,9,10,12,17,27,28,31,35,49,67,],[-4,8,-2,8,-3,-7,-8,-9,-10,8,-6,8,-13,-5,-11,-12,-14,]),'WHILE':([0,2,3,4,5,6,8,9,10,12,17,27,28,31,35,49,67,],[-4,9,-2,9,-3,-7,-8,-9,-10,9,-6,9,-13,-5,-11,-12,-14,]),'PRINT':([0,2,3,4,5,6,8,9,10,12,17,27,28,31,35,49,67,],[-4,11,-2,11,-3,-7,-8,-9,-10,11,-6,11,-13,-5,-11,-12,-14,]),'BO':([0,2,3,4,5,6,8,9,10,12,17,27,28,31,35,49,67,],[-4,12,-2,12,-3,-7,-8,-9,-10,12,-6,12,-13,-5,-11,-12,-14,]),'INT_TYPE':([0,2,3,5,31,],[-4,13,-2,-3,-5,]),'DOUBLE_TYPE':([0,2,3,5,31,],[-4,14,-2,-3,-5,]),'ID':([0,2,3,4,5,6,7,8,9,10,11,12,13,14,17,22,23,27,28,29,30,31,32,35,36,37,39,40,41,42,43,44,45,46,49,57,67,],[-4,16,-2,16,-3,-7,20,-8,-9,-10,16,16,-15,-16,-6,16,16,16,-13,16,51,-5,20,-11,16,16,16,16,16,16,16,16,16,16,-12,16,-14,]),'$end':([1,4,6,8,9,10,17,28,35,49,67,],[0,-1,-7,-8,-9,-10,-6,-13,-11,-12,-14,]),'BC':([6,8,9,10,17,27,28,35,49,67,],[-7,-8,-9,-10,-6,49,-13,-11,-12,-14,]),'NOT':([11,22,23,29,36,37,39,40,41,42,43,44,45,46,57,],[22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,]),'RO':([11,22,23,29,36,37,39,40,41,42,43,44,45,46,57,],[23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,]),'INT':([11,22,23,29,30,36,37,39,40,41,42,43,44,45,46,54,57,],[25,25,25,25,52,25,25,25,25,25,25,25,25,25,25,70,25,]),'DOUBLE':([11,22,23,29,36,37,39,40,41,42,43,44,45,46,57,],[26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,]),'S':([15,16,18,19,20,21,24,25,26,33,34,47,50,53,55,56,58,59,60,61,62,63,64,65,66,68,69,71,72,],[28,-22,31,-17,-4,35,-38,-39,-40,-19,-20,-27,67,-18,-25,-26,-29,-30,-31,-32,-33,-34,-35,-36,-37,-24,-23,-28,-21,]),'EQ':([15,16,21,24,25,26,38,47,48,50,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[29,-22,38,-38,-39,-40,57,38,38,38,38,38,38,38,38,38,38,38,38,38,-37,-24,-23,38,]),'AND':([16,21,24,25,26,47,48,50,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[-22,36,-38,-39,-40,36,36,36,36,36,36,36,36,36,36,36,36,36,-37,-24,-23,36,]),'OR':([16,21,24,25,26,47,48,50,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[-22,37,-38,-39,-40,37,37,37,37,37,37,37,37,37,37,37,37,37,-37,-24,-23,37,]),'MIN':([16,21,24,25,26,47,48,50,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[-22,39,-38,-39,-40,39,39,39,39,39,39,39,39,39,39,39,39,39,-37,-24,-23,39,]),'MAJ':([16,21,24,25,26,47,48,50,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[-22,40,-38,-39,-40,40,40,40,40,40,40,40,40,40,40,40,40,40,-37,-24,-23,40,]),'MAJ_EQ':([16,21,24,25,26,47,48,50,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[-22,41,-38,-39,-40,41,41,41,41,41,41,41,41,41,41,41,41,41,-37,-24,-23,41,]),'MIN_EQ':([16,21,24,25,26,47,48,50,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[-22,42,-38,-39,-40,42,42,42,42,42,42,42,42,42,42,42,42,42,-37,-24,-23,42,]),'PLUS':([16,21,24,25,26,47,48,50,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[-22,43,-38,-39,-40,43,43,43,43,43,43,43,43,43,43,43,43,43,-37,-24,-23,43,]),'MINUS':([16,21,24,25,26,47,48,50,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[-22,44,-38,-39,-40,44,44,44,44,44,44,44,44,44,44,44,44,44,-37,-24,-23,44,]),'STAR':([16,21,24,25,26,47,48,50,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[-22,45,-38,-39,-40,45,45,45,45,45,45,45,45,45,45,45,45,45,-37,-24,-23,45,]),'DIV':([16,21,24,25,26,47,48,50,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[-22,46,-38,-39,-40,46,46,46,46,46,46,46,46,46,46,46,46,46,-37,-24,-23,46,]),'RC':([16,24,25,26,47,48,55,56,58,59,60,61,62,63,64,65,66,68,69,71,],[-22,-38,-39,-40,-27,66,-25,-26,-29,-30,-31,-32,-33,-34,-35,-36,-37,-24,-23,-28,]),'SO':([16,20,33,34,72,],[30,-4,54,-20,-21,]),'CM':([18,19,20,33,34,53,72,],[32,-17,-4,-19,-20,-18,-21,]),'SC':([51,52,70,],[68,69,72,]),}
+_lr_action_items = {'IF':([0,2,3,4,5,6,9,11,13,18,23,31,32,35,41,55,61,62,75,79,80,],[-4,8,-2,8,-3,-7,8,-11,8,-6,-9,8,-14,-5,-12,-13,8,8,-15,-8,-10,]),'ELSE':([0,2,3,4,5,6,9,11,13,18,23,31,32,35,41,55,61,62,75,79,80,],[-4,9,-2,9,-3,-7,9,-11,9,-6,-9,9,-14,-5,-12,-13,9,9,-15,-8,-10,]),'WHILE':([0,2,3,4,5,6,9,11,13,18,23,31,32,35,41,55,61,62,75,79,80,],[-4,10,-2,10,-3,-7,10,-11,10,-6,-9,10,-14,-5,-12,-13,10,10,-15,-8,-10,]),'PRINT':([0,2,3,4,5,6,9,11,13,18,23,31,32,35,41,55,61,62,75,79,80,],[-4,12,-2,12,-3,-7,12,-11,12,-6,-9,12,-14,-5,-12,-13,12,12,-15,-8,-10,]),'BO':([0,2,3,4,5,6,9,11,13,18,23,31,32,35,41,55,61,62,75,79,80,],[-4,13,-2,13,-3,-7,13,-11,13,-6,-9,13,-14,-5,-12,-13,13,13,-15,-8,-10,]),'INT_TYPE':([0,2,3,5,35,],[-4,14,-2,-3,-5,]),'DOUBLE_TYPE':([0,2,3,5,35,],[-4,15,-2,-3,-5,]),'ID':([0,2,3,4,5,6,7,9,11,12,13,14,15,18,22,23,24,26,27,31,32,33,34,35,36,41,42,43,45,46,47,48,49,50,51,52,55,61,62,65,75,79,80,],[-4,17,-2,17,-3,-7,21,17,-11,17,17,-16,-17,-6,17,-9,17,17,17,17,-14,17,57,-5,21,-12,17,17,17,17,17,17,17,17,17,17,-13,17,17,17,-15,-8,-10,]),'$end':([1,4,6,11,18,23,32,41,55,75,79,80,],[0,-1,-7,-11,-6,-9,-14,-12,-13,-15,-8,-10,]),'BC':([6,11,18,23,31,32,41,55,75,79,80,],[-7,-11,-6,-9,55,-14,-12,-13,-15,-8,-10,]),'RO':([8,10,12,22,24,26,27,33,42,43,45,46,47,48,49,50,51,52,65,],[22,24,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,]),'NOT':([12,22,24,26,27,33,42,43,45,46,47,48,49,50,51,52,65,],[26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,]),'INT':([12,22,24,26,27,33,34,42,43,45,46,47,48,49,50,51,52,60,65,],[29,29,29,29,29,29,58,29,29,29,29,29,29,29,29,29,29,78,29,]),'DOUBLE':([12,22,24,26,27,33,42,43,45,46,47,48,49,50,51,52,65,],[30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,]),'S':([16,17,19,20,21,25,28,29,30,37,38,53,56,59,63,64,66,67,68,69,70,71,72,73,74,76,77,81,82,],[32,-23,35,-18,-4,41,-39,-40,-41,-20,-21,-28,75,-19,-26,-27,-30,-31,-32,-33,-34,-35,-36,-37,-38,-25,-24,-29,-22,]),'EQ':([16,17,25,28,29,30,39,40,44,53,54,56,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[33,-23,44,-39,-40,-41,44,44,65,44,44,44,44,44,44,44,44,44,-34,-35,-36,-37,-38,-25,-24,44,]),'AND':([17,25,28,29,30,39,40,53,54,56,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[-23,42,-39,-40,-41,42,42,42,42,42,42,42,42,42,42,42,-34,-35,-36,-37,-38,-25,-24,42,]),'OR':([17,25,28,29,30,39,40,53,54,56,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[-23,43,-39,-40,-41,43,43,43,43,43,43,43,43,43,43,43,-34,-35,-36,-37,-38,-25,-24,43,]),'MIN':([17,25,28,29,30,39,40,53,54,56,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[-23,45,-39,-40,-41,45,45,45,45,45,45,45,45,45,45,45,-34,-35,-36,-37,-38,-25,-24,45,]),'MAJ':([17,25,28,29,30,39,40,53,54,56,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[-23,46,-39,-40,-41,46,46,46,46,46,46,46,46,46,46,46,-34,-35,-36,-37,-38,-25,-24,46,]),'MAJ_EQ':([17,25,28,29,30,39,40,53,54,56,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[-23,47,-39,-40,-41,47,47,47,47,47,47,47,47,47,47,47,-34,-35,-36,-37,-38,-25,-24,47,]),'MIN_EQ':([17,25,28,29,30,39,40,53,54,56,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[-23,48,-39,-40,-41,48,48,48,48,48,48,48,48,48,48,48,-34,-35,-36,-37,-38,-25,-24,48,]),'PLUS':([17,25,28,29,30,39,40,53,54,56,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[-23,49,-39,-40,-41,49,49,49,49,49,49,49,49,49,49,49,-34,-35,-36,-37,-38,-25,-24,49,]),'MINUS':([17,25,28,29,30,39,40,53,54,56,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[-23,50,-39,-40,-41,50,50,50,50,50,50,50,50,50,50,50,-34,-35,-36,-37,-38,-25,-24,50,]),'STAR':([17,25,28,29,30,39,40,53,54,56,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[-23,51,-39,-40,-41,51,51,51,51,51,51,51,51,51,51,51,51,51,-36,-37,-38,-25,-24,51,]),'DIV':([17,25,28,29,30,39,40,53,54,56,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[-23,52,-39,-40,-41,52,52,52,52,52,52,52,52,52,52,52,52,52,-36,-37,-38,-25,-24,52,]),'RC':([17,28,29,30,39,40,53,54,63,64,66,67,68,69,70,71,72,73,74,76,77,81,],[-23,-39,-40,-41,61,62,-28,74,-26,-27,-30,-31,-32,-33,-34,-35,-36,-37,-38,-25,-24,-29,]),'SO':([17,21,37,38,82,],[34,-4,60,-21,-22,]),'CM':([19,20,21,37,38,59,82,],[36,-18,-4,-20,-21,-19,-22,]),'SC':([57,58,78,],[76,77,82,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'prog':([0,],[1,]),'decl_list':([0,],[2,]),'empty':([0,20,],[3,34,]),'stmt_list':([2,12,],[4,27,]),'decl':([2,],[5,]),'stmt':([2,4,12,27,],[6,17,6,17,]),'type':([2,],[7,]),'assignment':([2,4,12,27,],[10,10,10,10,]),'id':([2,4,11,12,22,23,27,29,36,37,39,40,41,42,43,44,45,46,57,],[15,15,24,15,24,24,15,24,24,24,24,24,24,24,24,24,24,24,24,]),'var_list':([7,],[18,]),'var':([7,32,],[19,53,]),'exp':([11,22,23,29,36,37,39,40,41,42,43,44,45,46,57,],[21,47,48,50,55,56,58,59,60,61,62,63,64,65,71,]),'array':([20,],[33,]),}
+_lr_goto_items = {'prog':([0,],[1,]),'decl_list':([0,],[2,]),'empty':([0,21,],[3,38,]),'stmt_list':([2,13,],[4,31,]),'decl':([2,],[5,]),'stmt':([2,4,9,13,31,61,62,],[6,18,23,6,18,79,80,]),'type':([2,],[7,]),'assignment':([2,4,9,13,31,61,62,],[11,11,11,11,11,11,11,]),'id':([2,4,9,12,13,22,24,26,27,31,33,42,43,45,46,47,48,49,50,51,52,61,62,65,],[16,16,16,28,16,28,28,28,28,16,28,28,28,28,28,28,28,28,28,28,28,16,16,28,]),'var_list':([7,],[19,]),'var':([7,36,],[20,59,]),'exp':([12,22,24,26,27,33,42,43,45,46,47,48,49,50,51,52,65,],[25,39,40,53,54,56,63,64,66,67,68,69,70,71,72,73,81,]),'array':([21,],[37,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,44 +27,45 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> prog","S'",1,None,None,None),
-  ('prog -> decl_list stmt_list','prog',2,'p_prog','Lexical-Asignacion.py',155),
-  ('decl_list -> empty','decl_list',1,'p_decl_list','Lexical-Asignacion.py',159),
-  ('decl_list -> decl_list decl','decl_list',2,'p_decl_list','Lexical-Asignacion.py',160),
-  ('empty -> <empty>','empty',0,'p_empty','Lexical-Asignacion.py',165),
-  ('decl -> type var_list S','decl',3,'p_decl','Lexical-Asignacion.py',169),
-  ('stmt_list -> stmt_list stmt','stmt_list',2,'p_stmt_list','Lexical-Asignacion.py',173),
-  ('stmt_list -> stmt','stmt_list',1,'p_stmt_list','Lexical-Asignacion.py',174),
-  ('stmt -> IF','stmt',1,'p_stmt','Lexical-Asignacion.py',179),
-  ('stmt -> WHILE','stmt',1,'p_stmt','Lexical-Asignacion.py',180),
-  ('stmt -> assignment','stmt',1,'p_stmt','Lexical-Asignacion.py',181),
-  ('stmt -> PRINT exp S','stmt',3,'p_stmt','Lexical-Asignacion.py',182),
-  ('stmt -> BO stmt_list BC','stmt',3,'p_stmt','Lexical-Asignacion.py',183),
-  ('assignment -> id S','assignment',2,'p_assignment','Lexical-Asignacion.py',188),
-  ('assignment -> id EQ exp S','assignment',4,'p_assignment','Lexical-Asignacion.py',189),
-  ('type -> INT_TYPE','type',1,'p_type','Lexical-Asignacion.py',194),
-  ('type -> DOUBLE_TYPE','type',1,'p_type','Lexical-Asignacion.py',195),
-  ('var_list -> var','var_list',1,'p_var_list','Lexical-Asignacion.py',200),
-  ('var_list -> var_list CM var','var_list',3,'p_var_list','Lexical-Asignacion.py',201),
-  ('var -> ID array','var',2,'p_var','Lexical-Asignacion.py',206),
-  ('array -> empty','array',1,'p_array','Lexical-Asignacion.py',210),
-  ('array -> array SO INT SC','array',4,'p_array','Lexical-Asignacion.py',211),
-  ('id -> ID','id',1,'p_id','Lexical-Asignacion.py',216),
-  ('id -> ID SO INT SC','id',4,'p_id','Lexical-Asignacion.py',217),
-  ('id -> ID SO ID SC','id',4,'p_id','Lexical-Asignacion.py',218),
-  ('exp -> exp AND exp','exp',3,'p_exp','Lexical-Asignacion.py',223),
-  ('exp -> exp OR exp','exp',3,'p_exp','Lexical-Asignacion.py',224),
-  ('exp -> NOT exp','exp',2,'p_exp','Lexical-Asignacion.py',225),
-  ('exp -> exp EQ EQ exp','exp',4,'p_exp','Lexical-Asignacion.py',226),
-  ('exp -> exp MIN exp','exp',3,'p_exp','Lexical-Asignacion.py',227),
-  ('exp -> exp MAJ exp','exp',3,'p_exp','Lexical-Asignacion.py',228),
-  ('exp -> exp MAJ_EQ exp','exp',3,'p_exp','Lexical-Asignacion.py',229),
-  ('exp -> exp MIN_EQ exp','exp',3,'p_exp','Lexical-Asignacion.py',230),
-  ('exp -> exp PLUS exp','exp',3,'p_exp','Lexical-Asignacion.py',231),
-  ('exp -> exp MINUS exp','exp',3,'p_exp','Lexical-Asignacion.py',232),
-  ('exp -> exp STAR exp','exp',3,'p_exp','Lexical-Asignacion.py',233),
-  ('exp -> exp DIV exp','exp',3,'p_exp','Lexical-Asignacion.py',234),
-  ('exp -> RO exp RC','exp',3,'p_exp','Lexical-Asignacion.py',235),
-  ('exp -> id','exp',1,'p_exp','Lexical-Asignacion.py',236),
-  ('exp -> INT','exp',1,'p_exp','Lexical-Asignacion.py',237),
-  ('exp -> DOUBLE','exp',1,'p_exp','Lexical-Asignacion.py',238),
+  ('prog -> decl_list stmt_list','prog',2,'p_prog','Lexical-Asignacion.py',180),
+  ('decl_list -> empty','decl_list',1,'p_decl_list','Lexical-Asignacion.py',184),
+  ('decl_list -> decl_list decl','decl_list',2,'p_decl_list','Lexical-Asignacion.py',185),
+  ('empty -> <empty>','empty',0,'p_empty','Lexical-Asignacion.py',190),
+  ('decl -> type var_list S','decl',3,'p_decl','Lexical-Asignacion.py',194),
+  ('stmt_list -> stmt_list stmt','stmt_list',2,'p_stmt_list','Lexical-Asignacion.py',198),
+  ('stmt_list -> stmt','stmt_list',1,'p_stmt_list','Lexical-Asignacion.py',199),
+  ('stmt -> IF RO exp RC stmt','stmt',5,'p_stmt','Lexical-Asignacion.py',204),
+  ('stmt -> ELSE stmt','stmt',2,'p_stmt','Lexical-Asignacion.py',205),
+  ('stmt -> WHILE RO exp RC stmt','stmt',5,'p_stmt','Lexical-Asignacion.py',206),
+  ('stmt -> assignment','stmt',1,'p_stmt','Lexical-Asignacion.py',207),
+  ('stmt -> PRINT exp S','stmt',3,'p_stmt','Lexical-Asignacion.py',208),
+  ('stmt -> BO stmt_list BC','stmt',3,'p_stmt','Lexical-Asignacion.py',209),
+  ('assignment -> id S','assignment',2,'p_assignment','Lexical-Asignacion.py',214),
+  ('assignment -> id EQ exp S','assignment',4,'p_assignment','Lexical-Asignacion.py',215),
+  ('type -> INT_TYPE','type',1,'p_type','Lexical-Asignacion.py',220),
+  ('type -> DOUBLE_TYPE','type',1,'p_type','Lexical-Asignacion.py',221),
+  ('var_list -> var','var_list',1,'p_var_list','Lexical-Asignacion.py',226),
+  ('var_list -> var_list CM var','var_list',3,'p_var_list','Lexical-Asignacion.py',227),
+  ('var -> ID array','var',2,'p_var','Lexical-Asignacion.py',232),
+  ('array -> empty','array',1,'p_array','Lexical-Asignacion.py',236),
+  ('array -> array SO INT SC','array',4,'p_array','Lexical-Asignacion.py',237),
+  ('id -> ID','id',1,'p_id','Lexical-Asignacion.py',242),
+  ('id -> ID SO INT SC','id',4,'p_id','Lexical-Asignacion.py',243),
+  ('id -> ID SO ID SC','id',4,'p_id','Lexical-Asignacion.py',244),
+  ('exp -> exp AND exp','exp',3,'p_exp','Lexical-Asignacion.py',249),
+  ('exp -> exp OR exp','exp',3,'p_exp','Lexical-Asignacion.py',250),
+  ('exp -> NOT exp','exp',2,'p_exp','Lexical-Asignacion.py',251),
+  ('exp -> exp EQ EQ exp','exp',4,'p_exp','Lexical-Asignacion.py',252),
+  ('exp -> exp MIN exp','exp',3,'p_exp','Lexical-Asignacion.py',253),
+  ('exp -> exp MAJ exp','exp',3,'p_exp','Lexical-Asignacion.py',254),
+  ('exp -> exp MAJ_EQ exp','exp',3,'p_exp','Lexical-Asignacion.py',255),
+  ('exp -> exp MIN_EQ exp','exp',3,'p_exp','Lexical-Asignacion.py',256),
+  ('exp -> exp PLUS exp','exp',3,'p_exp','Lexical-Asignacion.py',257),
+  ('exp -> exp MINUS exp','exp',3,'p_exp','Lexical-Asignacion.py',258),
+  ('exp -> exp STAR exp','exp',3,'p_exp','Lexical-Asignacion.py',259),
+  ('exp -> exp DIV exp','exp',3,'p_exp','Lexical-Asignacion.py',260),
+  ('exp -> RO exp RC','exp',3,'p_exp','Lexical-Asignacion.py',261),
+  ('exp -> id','exp',1,'p_exp','Lexical-Asignacion.py',262),
+  ('exp -> INT','exp',1,'p_exp','Lexical-Asignacion.py',263),
+  ('exp -> DOUBLE','exp',1,'p_exp','Lexical-Asignacion.py',264),
 ]
