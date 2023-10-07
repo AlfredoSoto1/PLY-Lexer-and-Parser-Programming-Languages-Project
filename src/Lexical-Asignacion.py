@@ -15,11 +15,21 @@ with open('src/Test_program.txt', 'r') as source_file:
     source_code = source_file.read() 
 
 source_code = """
-int a;
+int a, b;
 a = 10;
+b = 0;
 
-a = a +10;
-a = a -10;
+while (a < 10) {
+    a = a + 1;
+
+    if(a -1 >= 21) {
+        print(a + a - 21);
+    } else if(b == a) {
+        print(b);
+    } else {
+        print(a + b);
+    }
+}
 """
 
 # --- Lexer machine parameters implementation ---
