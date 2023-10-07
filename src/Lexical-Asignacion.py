@@ -1,10 +1,3 @@
-# Using ply - lexer we are going to:
-# create our custom tokens with our regular expressions.
-# This later will be sent to the ply-lexer and build the 
-# machine that will interpret our code. For this instance
-# the machine will ONLY scan the code and tokenize all
-# elements inside the test program provided as a text file
-
 import ply.lex  as ply_lexer
 import ply.yacc as ply_parser
 
@@ -17,7 +10,7 @@ with open('src/Test_program.txt', 'r') as source_file:
 source_code = """
 int a, b;
 a = 10;
-b = 0;
+b = 0.0;
 
 while (a < 10) {
     a = a + 1;
@@ -48,8 +41,8 @@ defined_keywords = {
 # for lexer from ply to use when scanning the code
 tokens = [
     'ID',          # consists of: [a-zA-Z][a-zA-Z0-9]*
-    'INT',         # consists of: -?[1-9][0-9]*
-    'DOUBLE',      # consists of: -?[0-9]+(\.[0-9]+)?([Ee][+-]?[0-9]+)?
+    'INT',         # consists of: -?[0-9]+
+    'DOUBLE',      # consists of: -?[0-9]+\.([0-9]+)?
     'COMMENT',     # consists of: //[.*]\n
     'WHITESPACE',  # consists of: [ \t\r]+
     'NEWLINE',     # consists of: [\n]+
