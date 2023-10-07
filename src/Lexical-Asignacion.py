@@ -15,39 +15,11 @@ with open('src/Test_program.txt', 'r') as source_file:
     source_code = source_file.read() 
 
 source_code = """
-double x[5];
-int i, j;
-double swap;
-int pos;
+int a;
+a = 10;
 
-// Bubble sort
-pos = 5;
-while (pos > 0) {
-  i = 0;
-  while (i < pos - 1){
-    j = i + 1;
-    if (x[i] > x[j]){
-      swap = x[j];
-      x[j] = x[i];
-      x[i] = swap;
-    }
-    i = i + 1;
-  }
-  pos = pos -1;
-}
-
-// if ( pos > 0) {
-//   x[0] = 3.4;
-// } else {
-//   x[0] = 3.7;
-// }
-
-// Print Results
- // i = 0;
- // while(i<5){
- // print x[i];
- // i = i + 1;
- // }
+a = a +10;
+a = a -10;
 """
 
 # --- Lexer machine parameters implementation ---
@@ -171,10 +143,10 @@ while True:
 
 # --- Parser machine implementation ---
 
-precedence = (
-   ('left', 'PLUS', 'MINUS'),
-   ('left', 'STAR', 'DIV'),
-)
+# precedence = (
+#    ('left', 'PLUS', 'MINUS'),
+#    ('left', 'STAR', 'DIV'),
+# )
 
 def p_prog(p):
     '''prog : decl_list stmt_list'''
@@ -245,6 +217,11 @@ def p_id(p):
     '''
     pass
 
+# The following defined expression:
+# exp INT | exp DOUBLE
+# are for the expressions that add/substract and have a negative sign attached to it like:
+# variable -1 == variable - 1  In this case both refer to substraction operator
+# and not expression concatenated to a negative int/double
 def p_exp(p):
     '''exp : exp AND exp
         | exp OR exp
@@ -259,6 +236,8 @@ def p_exp(p):
         | exp STAR exp
         | exp DIV exp
         | RO exp RC
+        | exp INT
+        | exp DOUBLE
         | id
         | INT
         | DOUBLE
