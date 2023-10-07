@@ -7,23 +7,23 @@ with open('src/Test_program.txt', 'r') as source_file:
     # Obtain the source code from source file
     source_code = source_file.read() 
 
-source_code = """
-int a, b;
-a = 10;
-b = 0.0;
+# source_code = """
+# int a, b;
+# a = 10;
+# b = 0.0;
 
-while (a < 10) {
-    a = a + 1;
+# while (a < 10) {
+#     a = a + 1;
 
-    if(a -1 >= 21) {
-        print(a + a - 21);
-    } else if(b == a) {
-        print(b);
-    } else {
-        print(a + b);
-    }
-}
-"""
+#     if(a -1 >= 21) {
+#         print(a + a - 21);
+#     } else if(b == a) {
+#         print(b);
+#     } else {
+#         print(a + b);
+#     }
+# }
+# """
 
 # --- Lexer machine parameters implementation ---
 
