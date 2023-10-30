@@ -7,23 +7,22 @@ with open('src/Test_program.txt', 'r') as source_file:
     # Obtain the source code from source file
     source_code = source_file.read() 
 
-# source_code = """
-# int a, b;
-# a = 10;
-# b = 0.0;
+source_code = """
+int x, y, z;
+int b[2][2][2];
+double a;
+a = 10;
+b[1][1][1] = 0;
 
-# while (a < 10) {
-#     a = a + 1;
+x = 10;
+y = 20;
+z = 30;
 
-#     if(a -1 >= 21) {
-#         print(a + a - 21);
-#     } else if(b == a) {
-#         print(b);
-#     } else {
-#         print(a + b);
-#     }
-# }
-# """
+// a = a-1;
+// a = a - 1;
+// a = a + a + -a + -1;
+// a = a + - 1; // not compile
+"""
 
 # --- Lexer machine parameters implementation ---
 
@@ -66,6 +65,8 @@ tokens = [
     'MAJ_EQ',   # >=
     'PLUS',     # +
     'MINUS',    # -
+    'UMINUS',   # unitary minus (-)
+    'MINUS_ID', # unitary minus on IDs (-)
     'STAR',     # *
     'DIV',      # /
     'CM',       # ,
@@ -89,7 +90,6 @@ t_MAJ = r'>'
 t_MIN_EQ = r'<='
 t_MAJ_EQ = r'>='
 t_PLUS = r'\+'
-t_MINUS = r'\-'
 t_STAR = r'\*'
 t_DIV = r'/'
 t_CM = r','
@@ -109,18 +109,32 @@ def t_NEWLINE(t):
     t.lexer.lineno += len(t.value)
     pass
 
+def t_MINUS_ID(t):
+    r'\-[a-zA-Z][a-zA-Z0-9]*'
+    t.value = t.value[1:]  # Remove the minus sign  
+    return t
+
 def t_ID(t):
     r'[a-zA-Z][a-zA-Z0-9]*'
     # Check if it's a keyword
     t.type = defined_keywords.get(t.value, 'ID')  
     return t
 
+def t_UMINUS(t):
+    r'[-]\d+(\.\d+)?'
+    t.value = float(t.value) if '.' in t.value else int(t.value)
+    return t
+
+def t_MINUS(t):
+    r'\-'
+    return t
+
 def t_DOUBLE(t):
-    r'-?[0-9]+\.([0-9]+)?'
+    r'[0-9]+\.([0-9]+)?'
     return t
 
 def t_INT(t):
-    r'-?[0-9]+'
+    r'[0-9]+'
     t.value = int(t.value)
     return t
 
@@ -134,6 +148,8 @@ lexer = ply_lexer.lex()
 # Feed the lexer with the source code
 lexer.input(source_code)
 
+print('--------------Lexical stage----------------')
+
 while True: 
     token = lexer.token()
 
@@ -143,13 +159,23 @@ while True:
     # print(token.type, token.value, token.lineno, token.lexpos)
     # print(token)
 
+print('--------------Parser stage----------------')
 
 # --- Parser machine implementation ---
 
-# precedence = (
-#    ('left', 'PLUS', 'MINUS'),
-#    ('left', 'STAR', 'DIV'),
-# )
+assembly_code = []
+
+def generate_array_index_code(index_array):
+    array_indices = ""
+    for var in index_array[1:]:
+        array_indices += "[" + str(var) + "]"
+    return array_indices
+
+precedence = (
+    ('left', 'PLUS', 'MINUS'),
+    ('left', 'STAR', 'DIV'),
+    ('right', 'UMINUS'),
+)
 
 def p_prog(p):
     '''prog : decl_list stmt_list'''
@@ -167,6 +193,8 @@ def p_empty(p):
 
 def p_decl(p):
     '''decl : type var_list S'''
+    for variable in p[2]:
+        assembly_code.append(f'{p[1]} {variable[0]}{generate_array_index_code(variable)}')
     pass
 
 def p_stmt_list(p):
@@ -186,45 +214,91 @@ def p_stmt(p):
     pass
 
 def p_assignment(p):
-    '''assignment : id S
-        | id EQ exp S
-    '''
+    '''assignment : id EQ exp S'''
+    id_index_array = p[1]
+    if isinstance(id_index_array, list):
+        # If it's an array access
+        assembly_code.append(f'EVAL {p[3]}')
+        assembly_code.append(f'ASS {id_index_array[0]}{generate_array_index_code(id_index_array)}')
+    else:
+        # If it's a simple identifier
+        assembly_code.append(f'EVAL {p[3]}')
+        assembly_code.append(f'ASS {id_index_array}')
     pass
 
 def p_type(p):
     '''type : INT_TYPE
         | DOUBLE_TYPE
     '''
+    if p[1] == 'int':
+        p[0] = 'INT'
+    elif p[1] == 'double':
+        p[0] = 'DOUBLE'
     pass
 
 def p_var_list(p):
     '''var_list : var
         | var_list CM var
     '''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = p[1] + [p[3]]
     pass
 
 def p_var(p):
     '''var : ID array'''
+    if p[2] is None:
+        p[0] = p[1]
+    else:
+        p[0] = [p[1]] + p[2]
     pass
 
 def p_array(p):
     '''array : empty
-        | array SO INT SC
+        | SO INT SC array
     '''
+    if len(p) == 5:
+        # Non-empty id_array
+        if p[4] is None:
+            p[0] = [p[2]]
+        else:
+            p[0] = [p[2]] + p[4]
+    else:
+        # Empty id_array
+        p[0] = None
+    pass
+
+def p_id_array(p):
+    '''id_array : SO INT SC id_array
+        | SO id SC id_array
+        | empty
+    '''
+    if len(p) == 5:
+        # Non-empty id_array
+        if p[4] is None:
+            p[0] = [p[2]]
+        else:
+            p[0] = [p[2]] + p[4]
+    else:
+        # Empty id_array
+        p[0] = None
     pass
 
 def p_id(p):
     '''id : ID
-        | ID SO INT SC
-        | ID SO ID SC
+        | ID id_array
     '''
+    if len(p) == 2:
+        # Pass the ID only
+        p[0] = p[1]
+    else:
+        if p[2] is not None:
+            p[0] = [p[1]] + p[2]
+        else:
+            p[0] = [p[1]]
     pass
 
-# The following defined expression:
-# exp INT | exp DOUBLE
-# are for the expressions that add/substract and have a negative sign attached to it like:
-# variable -1 == variable - 1  In this case both refer to substraction operator
-# and not expression concatenated to a negative int/double
 def p_exp(p):
     '''exp : exp AND exp
         | exp OR exp
@@ -238,14 +312,18 @@ def p_exp(p):
         | exp MINUS exp
         | exp STAR exp
         | exp DIV exp
+        | exp UMINUS
+        | exp MINUS_ID
         | RO exp RC
-        | exp INT
-        | exp DOUBLE
         | id
         | INT
         | DOUBLE
+        | UMINUS
+        | MINUS_ID
     '''
-    pass
+    if len(p) == 2:
+        p[0] = p[1]
+    pass 
 
 def p_error(p):
     print(f"Syntax error at line {p.lineno}, position {p.lexpos}, token {p.type}")
@@ -259,3 +337,8 @@ result = parser.parse(source_code)
 
 # Print the parse tree
 print(result)
+
+# print the generated assembly code
+print('--------------Pseudo-assembly code----------------')
+for code in assembly_code:
+    print(code)

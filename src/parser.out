@@ -22,88 +22,94 @@ Rule 10    stmt -> WHILE RO exp RC stmt
 Rule 11    stmt -> assignment
 Rule 12    stmt -> PRINT exp S
 Rule 13    stmt -> BO stmt_list BC
-Rule 14    assignment -> id S
-Rule 15    assignment -> id EQ exp S
-Rule 16    type -> INT_TYPE
-Rule 17    type -> DOUBLE_TYPE
-Rule 18    var_list -> var
-Rule 19    var_list -> var_list CM var
-Rule 20    var -> ID array
-Rule 21    array -> empty
-Rule 22    array -> array SO INT SC
-Rule 23    id -> ID
-Rule 24    id -> ID SO INT SC
-Rule 25    id -> ID SO ID SC
-Rule 26    exp -> exp AND exp
-Rule 27    exp -> exp OR exp
-Rule 28    exp -> NOT exp
-Rule 29    exp -> exp EQ EQ exp
-Rule 30    exp -> exp MIN exp
-Rule 31    exp -> exp MAJ exp
-Rule 32    exp -> exp MAJ_EQ exp
-Rule 33    exp -> exp MIN_EQ exp
-Rule 34    exp -> exp PLUS exp
-Rule 35    exp -> exp MINUS exp
-Rule 36    exp -> exp STAR exp
-Rule 37    exp -> exp DIV exp
-Rule 38    exp -> RO exp RC
-Rule 39    exp -> exp INT
-Rule 40    exp -> exp DOUBLE
-Rule 41    exp -> id
-Rule 42    exp -> INT
-Rule 43    exp -> DOUBLE
+Rule 14    assignment -> id EQ exp S
+Rule 15    type -> INT_TYPE
+Rule 16    type -> DOUBLE_TYPE
+Rule 17    var_list -> var
+Rule 18    var_list -> var_list CM var
+Rule 19    var -> ID array
+Rule 20    array -> empty
+Rule 21    array -> SO INT SC array
+Rule 22    id_array -> SO INT SC id_array
+Rule 23    id_array -> SO id SC id_array
+Rule 24    id_array -> empty
+Rule 25    id -> ID
+Rule 26    id -> ID id_array
+Rule 27    exp -> exp AND exp
+Rule 28    exp -> exp OR exp
+Rule 29    exp -> NOT exp
+Rule 30    exp -> exp EQ EQ exp
+Rule 31    exp -> exp MIN exp
+Rule 32    exp -> exp MAJ exp
+Rule 33    exp -> exp MAJ_EQ exp
+Rule 34    exp -> exp MIN_EQ exp
+Rule 35    exp -> exp PLUS exp
+Rule 36    exp -> exp MINUS exp
+Rule 37    exp -> exp STAR exp
+Rule 38    exp -> exp DIV exp
+Rule 39    exp -> exp UMINUS
+Rule 40    exp -> exp MINUS_ID
+Rule 41    exp -> RO exp RC
+Rule 42    exp -> id
+Rule 43    exp -> INT
+Rule 44    exp -> DOUBLE
+Rule 45    exp -> UMINUS
+Rule 46    exp -> MINUS_ID
 
 Terminals, with rules where they appear
 
-AND                  : 26
+AND                  : 27
 BC                   : 13
 BO                   : 13
-CM                   : 19
+CM                   : 18
 COMMENT              : 
-DIV                  : 37
-DOUBLE               : 40 43
-DOUBLE_TYPE          : 17
+DIV                  : 38
+DOUBLE               : 44
+DOUBLE_TYPE          : 16
 ELSE                 : 9
-EQ                   : 15 29 29
-ID                   : 20 23 24 25 25
+EQ                   : 14 30 30
+ID                   : 19 25 26
 IF                   : 8
-INT                  : 22 24 39 42
-INT_TYPE             : 16
-MAJ                  : 31
-MAJ_EQ               : 32
-MIN                  : 30
-MINUS                : 35
-MIN_EQ               : 33
+INT                  : 21 22 43
+INT_TYPE             : 15
+MAJ                  : 32
+MAJ_EQ               : 33
+MIN                  : 31
+MINUS                : 36
+MINUS_ID             : 40 46
+MIN_EQ               : 34
 NEWLINE              : 
-NOT                  : 28
-OR                   : 27
-PLUS                 : 34
+NOT                  : 29
+OR                   : 28
+PLUS                 : 35
 PRINT                : 12
-RC                   : 8 10 38
-RO                   : 8 10 38
-S                    : 5 12 14 15
-SC                   : 22 24 25
-SO                   : 22 24 25
-STAR                 : 36
+RC                   : 8 10 41
+RO                   : 8 10 41
+S                    : 5 12 14
+SC                   : 21 22 23
+SO                   : 21 22 23
+STAR                 : 37
+UMINUS               : 39 45
 WHILE                : 10
 WHITESPACE           : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-array                : 20 22
+array                : 19 21
 assignment           : 11
 decl                 : 3
 decl_list            : 1 3
-empty                : 2 21
-exp                  : 8 10 12 15 26 26 27 27 28 29 29 30 30 31 31 32 32 33 33 34 34 35 35 36 36 37 37 38 39 40
-id                   : 14 15 41
+empty                : 2 20 24
+exp                  : 8 10 12 14 27 27 28 28 29 30 30 31 31 32 32 33 33 34 34 35 35 36 36 37 37 38 38 39 40 41
+id                   : 14 23 42
+id_array             : 22 23 26
 prog                 : 0
 stmt                 : 6 7 8 9 10
 stmt_list            : 1 6 13
 type                 : 5
-var                  : 18 19
-var_list             : 5 19
+var                  : 17 18
+var_list             : 5 18
 
 Parsing method: LALR
 
@@ -147,13 +153,11 @@ state 2
     (11) stmt -> . assignment
     (12) stmt -> . PRINT exp S
     (13) stmt -> . BO stmt_list BC
-    (16) type -> . INT_TYPE
-    (17) type -> . DOUBLE_TYPE
-    (14) assignment -> . id S
-    (15) assignment -> . id EQ exp S
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (15) type -> . INT_TYPE
+    (16) type -> . DOUBLE_TYPE
+    (14) assignment -> . id EQ exp S
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     IF              shift and go to state 8
     ELSE            shift and go to state 9
@@ -195,11 +199,9 @@ state 4
     (11) stmt -> . assignment
     (12) stmt -> . PRINT exp S
     (13) stmt -> . BO stmt_list BC
-    (14) assignment -> . id S
-    (15) assignment -> . id EQ exp S
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (14) assignment -> . id EQ exp S
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     $end            reduce using rule 1 (prog -> decl_list stmt_list .)
     IF              shift and go to state 8
@@ -244,9 +246,9 @@ state 6
 state 7
 
     (5) decl -> type . var_list S
-    (18) var_list -> . var
-    (19) var_list -> . var_list CM var
-    (20) var -> . ID array
+    (17) var_list -> . var
+    (18) var_list -> . var_list CM var
+    (19) var -> . ID array
 
     ID              shift and go to state 21
 
@@ -269,11 +271,9 @@ state 9
     (11) stmt -> . assignment
     (12) stmt -> . PRINT exp S
     (13) stmt -> . BO stmt_list BC
-    (14) assignment -> . id S
-    (15) assignment -> . id EQ exp S
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (14) assignment -> . id EQ exp S
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     IF              shift and go to state 8
     ELSE            shift and go to state 9
@@ -310,32 +310,35 @@ state 11
 state 12
 
     (12) stmt -> PRINT . exp S
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
     ID              shift and go to state 17
 
     exp                            shift and go to state 25
@@ -352,11 +355,9 @@ state 13
     (11) stmt -> . assignment
     (12) stmt -> . PRINT exp S
     (13) stmt -> . BO stmt_list BC
-    (14) assignment -> . id S
-    (15) assignment -> . id EQ exp S
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (14) assignment -> . id EQ exp S
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     IF              shift and go to state 8
     ELSE            shift and go to state 9
@@ -365,57 +366,94 @@ state 13
     BO              shift and go to state 13
     ID              shift and go to state 17
 
-    stmt_list                      shift and go to state 31
+    stmt_list                      shift and go to state 33
     stmt                           shift and go to state 6
     assignment                     shift and go to state 11
     id                             shift and go to state 16
 
 state 14
 
-    (16) type -> INT_TYPE .
+    (15) type -> INT_TYPE .
 
-    ID              reduce using rule 16 (type -> INT_TYPE .)
+    ID              reduce using rule 15 (type -> INT_TYPE .)
 
 
 state 15
 
-    (17) type -> DOUBLE_TYPE .
+    (16) type -> DOUBLE_TYPE .
 
-    ID              reduce using rule 17 (type -> DOUBLE_TYPE .)
+    ID              reduce using rule 16 (type -> DOUBLE_TYPE .)
 
 
 state 16
 
-    (14) assignment -> id . S
-    (15) assignment -> id . EQ exp S
+    (14) assignment -> id . EQ exp S
 
-    S               shift and go to state 32
-    EQ              shift and go to state 33
+    EQ              shift and go to state 34
 
 
 state 17
 
-    (23) id -> ID .
-    (24) id -> ID . SO INT SC
-    (25) id -> ID . SO ID SC
+    (25) id -> ID .
+    (26) id -> ID . id_array
+    (22) id_array -> . SO INT SC id_array
+    (23) id_array -> . SO id SC id_array
+    (24) id_array -> . empty
+    (4) empty -> .
 
-    S               reduce using rule 23 (id -> ID .)
-    EQ              reduce using rule 23 (id -> ID .)
-    AND             reduce using rule 23 (id -> ID .)
-    OR              reduce using rule 23 (id -> ID .)
-    MIN             reduce using rule 23 (id -> ID .)
-    MAJ             reduce using rule 23 (id -> ID .)
-    MAJ_EQ          reduce using rule 23 (id -> ID .)
-    MIN_EQ          reduce using rule 23 (id -> ID .)
-    PLUS            reduce using rule 23 (id -> ID .)
-    MINUS           reduce using rule 23 (id -> ID .)
-    STAR            reduce using rule 23 (id -> ID .)
-    DIV             reduce using rule 23 (id -> ID .)
-    INT             reduce using rule 23 (id -> ID .)
-    DOUBLE          reduce using rule 23 (id -> ID .)
-    RC              reduce using rule 23 (id -> ID .)
-    SO              shift and go to state 34
+  ! reduce/reduce conflict for EQ resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for S resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for AND resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for OR resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for MIN resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for MAJ resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for MAJ_EQ resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for MIN_EQ resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for PLUS resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for MINUS resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for STAR resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for DIV resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for UMINUS resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for MINUS_ID resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for RC resolved using rule 4 (empty -> .)
+  ! reduce/reduce conflict for SC resolved using rule 4 (empty -> .)
+    SO              shift and go to state 36
+    EQ              reduce using rule 4 (empty -> .)
+    S               reduce using rule 4 (empty -> .)
+    AND             reduce using rule 4 (empty -> .)
+    OR              reduce using rule 4 (empty -> .)
+    MIN             reduce using rule 4 (empty -> .)
+    MAJ             reduce using rule 4 (empty -> .)
+    MAJ_EQ          reduce using rule 4 (empty -> .)
+    MIN_EQ          reduce using rule 4 (empty -> .)
+    PLUS            reduce using rule 4 (empty -> .)
+    MINUS           reduce using rule 4 (empty -> .)
+    STAR            reduce using rule 4 (empty -> .)
+    DIV             reduce using rule 4 (empty -> .)
+    UMINUS          reduce using rule 4 (empty -> .)
+    MINUS_ID        reduce using rule 4 (empty -> .)
+    RC              reduce using rule 4 (empty -> .)
+    SC              reduce using rule 4 (empty -> .)
 
+  ! EQ              [ reduce using rule 25 (id -> ID .) ]
+  ! S               [ reduce using rule 25 (id -> ID .) ]
+  ! AND             [ reduce using rule 25 (id -> ID .) ]
+  ! OR              [ reduce using rule 25 (id -> ID .) ]
+  ! MIN             [ reduce using rule 25 (id -> ID .) ]
+  ! MAJ             [ reduce using rule 25 (id -> ID .) ]
+  ! MAJ_EQ          [ reduce using rule 25 (id -> ID .) ]
+  ! MIN_EQ          [ reduce using rule 25 (id -> ID .) ]
+  ! PLUS            [ reduce using rule 25 (id -> ID .) ]
+  ! MINUS           [ reduce using rule 25 (id -> ID .) ]
+  ! STAR            [ reduce using rule 25 (id -> ID .) ]
+  ! DIV             [ reduce using rule 25 (id -> ID .) ]
+  ! UMINUS          [ reduce using rule 25 (id -> ID .) ]
+  ! MINUS_ID        [ reduce using rule 25 (id -> ID .) ]
+  ! RC              [ reduce using rule 25 (id -> ID .) ]
+  ! SC              [ reduce using rule 25 (id -> ID .) ]
+
+    id_array                       shift and go to state 35
+    empty                          shift and go to state 37
 
 state 18
 
@@ -434,66 +472,69 @@ state 18
 state 19
 
     (5) decl -> type var_list . S
-    (19) var_list -> var_list . CM var
+    (18) var_list -> var_list . CM var
 
-    S               shift and go to state 35
-    CM              shift and go to state 36
+    S               shift and go to state 38
+    CM              shift and go to state 39
 
 
 state 20
 
-    (18) var_list -> var .
+    (17) var_list -> var .
 
-    S               reduce using rule 18 (var_list -> var .)
-    CM              reduce using rule 18 (var_list -> var .)
+    S               reduce using rule 17 (var_list -> var .)
+    CM              reduce using rule 17 (var_list -> var .)
 
 
 state 21
 
-    (20) var -> ID . array
-    (21) array -> . empty
-    (22) array -> . array SO INT SC
+    (19) var -> ID . array
+    (20) array -> . empty
+    (21) array -> . SO INT SC array
     (4) empty -> .
 
-    SO              reduce using rule 4 (empty -> .)
+    SO              shift and go to state 42
     S               reduce using rule 4 (empty -> .)
     CM              reduce using rule 4 (empty -> .)
 
-    array                          shift and go to state 37
-    empty                          shift and go to state 38
+    array                          shift and go to state 40
+    empty                          shift and go to state 41
 
 state 22
 
     (8) stmt -> IF RO . exp RC stmt
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
     ID              shift and go to state 17
 
-    exp                            shift and go to state 39
+    exp                            shift and go to state 43
     id                             shift and go to state 30
 
 state 23
@@ -513,202 +554,253 @@ state 23
 state 24
 
     (10) stmt -> WHILE RO . exp RC stmt
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
     ID              shift and go to state 17
 
-    exp                            shift and go to state 40
+    exp                            shift and go to state 44
     id                             shift and go to state 30
 
 state 25
 
     (12) stmt -> PRINT exp . S
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
-    S               shift and go to state 41
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+    S               shift and go to state 45
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
 
 
 state 26
 
-    (28) exp -> NOT . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (29) exp -> NOT . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
     ID              shift and go to state 17
 
-    exp                            shift and go to state 55
+    exp                            shift and go to state 59
     id                             shift and go to state 30
 
 state 27
 
-    (38) exp -> RO . exp RC
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (45) exp -> UMINUS .
 
-    NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
-    ID              shift and go to state 17
+    S               reduce using rule 45 (exp -> UMINUS .)
+    AND             reduce using rule 45 (exp -> UMINUS .)
+    OR              reduce using rule 45 (exp -> UMINUS .)
+    EQ              reduce using rule 45 (exp -> UMINUS .)
+    MIN             reduce using rule 45 (exp -> UMINUS .)
+    MAJ             reduce using rule 45 (exp -> UMINUS .)
+    MAJ_EQ          reduce using rule 45 (exp -> UMINUS .)
+    MIN_EQ          reduce using rule 45 (exp -> UMINUS .)
+    PLUS            reduce using rule 45 (exp -> UMINUS .)
+    MINUS           reduce using rule 45 (exp -> UMINUS .)
+    STAR            reduce using rule 45 (exp -> UMINUS .)
+    DIV             reduce using rule 45 (exp -> UMINUS .)
+    UMINUS          reduce using rule 45 (exp -> UMINUS .)
+    MINUS_ID        reduce using rule 45 (exp -> UMINUS .)
+    RC              reduce using rule 45 (exp -> UMINUS .)
 
-    exp                            shift and go to state 56
-    id                             shift and go to state 30
 
 state 28
 
-    (42) exp -> INT .
+    (46) exp -> MINUS_ID .
 
-    S               reduce using rule 42 (exp -> INT .)
-    AND             reduce using rule 42 (exp -> INT .)
-    OR              reduce using rule 42 (exp -> INT .)
-    EQ              reduce using rule 42 (exp -> INT .)
-    MIN             reduce using rule 42 (exp -> INT .)
-    MAJ             reduce using rule 42 (exp -> INT .)
-    MAJ_EQ          reduce using rule 42 (exp -> INT .)
-    MIN_EQ          reduce using rule 42 (exp -> INT .)
-    PLUS            reduce using rule 42 (exp -> INT .)
-    MINUS           reduce using rule 42 (exp -> INT .)
-    STAR            reduce using rule 42 (exp -> INT .)
-    DIV             reduce using rule 42 (exp -> INT .)
-    INT             reduce using rule 42 (exp -> INT .)
-    DOUBLE          reduce using rule 42 (exp -> INT .)
-    RC              reduce using rule 42 (exp -> INT .)
+    S               reduce using rule 46 (exp -> MINUS_ID .)
+    AND             reduce using rule 46 (exp -> MINUS_ID .)
+    OR              reduce using rule 46 (exp -> MINUS_ID .)
+    EQ              reduce using rule 46 (exp -> MINUS_ID .)
+    MIN             reduce using rule 46 (exp -> MINUS_ID .)
+    MAJ             reduce using rule 46 (exp -> MINUS_ID .)
+    MAJ_EQ          reduce using rule 46 (exp -> MINUS_ID .)
+    MIN_EQ          reduce using rule 46 (exp -> MINUS_ID .)
+    PLUS            reduce using rule 46 (exp -> MINUS_ID .)
+    MINUS           reduce using rule 46 (exp -> MINUS_ID .)
+    STAR            reduce using rule 46 (exp -> MINUS_ID .)
+    DIV             reduce using rule 46 (exp -> MINUS_ID .)
+    UMINUS          reduce using rule 46 (exp -> MINUS_ID .)
+    MINUS_ID        reduce using rule 46 (exp -> MINUS_ID .)
+    RC              reduce using rule 46 (exp -> MINUS_ID .)
 
 
 state 29
 
-    (43) exp -> DOUBLE .
+    (41) exp -> RO . exp RC
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
-    S               reduce using rule 43 (exp -> DOUBLE .)
-    AND             reduce using rule 43 (exp -> DOUBLE .)
-    OR              reduce using rule 43 (exp -> DOUBLE .)
-    EQ              reduce using rule 43 (exp -> DOUBLE .)
-    MIN             reduce using rule 43 (exp -> DOUBLE .)
-    MAJ             reduce using rule 43 (exp -> DOUBLE .)
-    MAJ_EQ          reduce using rule 43 (exp -> DOUBLE .)
-    MIN_EQ          reduce using rule 43 (exp -> DOUBLE .)
-    PLUS            reduce using rule 43 (exp -> DOUBLE .)
-    MINUS           reduce using rule 43 (exp -> DOUBLE .)
-    STAR            reduce using rule 43 (exp -> DOUBLE .)
-    DIV             reduce using rule 43 (exp -> DOUBLE .)
-    INT             reduce using rule 43 (exp -> DOUBLE .)
-    DOUBLE          reduce using rule 43 (exp -> DOUBLE .)
-    RC              reduce using rule 43 (exp -> DOUBLE .)
+    NOT             shift and go to state 26
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
+    ID              shift and go to state 17
 
+    exp                            shift and go to state 60
+    id                             shift and go to state 30
 
 state 30
 
-    (41) exp -> id .
+    (42) exp -> id .
 
-    S               reduce using rule 41 (exp -> id .)
-    AND             reduce using rule 41 (exp -> id .)
-    OR              reduce using rule 41 (exp -> id .)
-    EQ              reduce using rule 41 (exp -> id .)
-    MIN             reduce using rule 41 (exp -> id .)
-    MAJ             reduce using rule 41 (exp -> id .)
-    MAJ_EQ          reduce using rule 41 (exp -> id .)
-    MIN_EQ          reduce using rule 41 (exp -> id .)
-    PLUS            reduce using rule 41 (exp -> id .)
-    MINUS           reduce using rule 41 (exp -> id .)
-    STAR            reduce using rule 41 (exp -> id .)
-    DIV             reduce using rule 41 (exp -> id .)
-    INT             reduce using rule 41 (exp -> id .)
-    DOUBLE          reduce using rule 41 (exp -> id .)
-    RC              reduce using rule 41 (exp -> id .)
+    S               reduce using rule 42 (exp -> id .)
+    AND             reduce using rule 42 (exp -> id .)
+    OR              reduce using rule 42 (exp -> id .)
+    EQ              reduce using rule 42 (exp -> id .)
+    MIN             reduce using rule 42 (exp -> id .)
+    MAJ             reduce using rule 42 (exp -> id .)
+    MAJ_EQ          reduce using rule 42 (exp -> id .)
+    MIN_EQ          reduce using rule 42 (exp -> id .)
+    PLUS            reduce using rule 42 (exp -> id .)
+    MINUS           reduce using rule 42 (exp -> id .)
+    STAR            reduce using rule 42 (exp -> id .)
+    DIV             reduce using rule 42 (exp -> id .)
+    UMINUS          reduce using rule 42 (exp -> id .)
+    MINUS_ID        reduce using rule 42 (exp -> id .)
+    RC              reduce using rule 42 (exp -> id .)
 
 
 state 31
+
+    (43) exp -> INT .
+
+    S               reduce using rule 43 (exp -> INT .)
+    AND             reduce using rule 43 (exp -> INT .)
+    OR              reduce using rule 43 (exp -> INT .)
+    EQ              reduce using rule 43 (exp -> INT .)
+    MIN             reduce using rule 43 (exp -> INT .)
+    MAJ             reduce using rule 43 (exp -> INT .)
+    MAJ_EQ          reduce using rule 43 (exp -> INT .)
+    MIN_EQ          reduce using rule 43 (exp -> INT .)
+    PLUS            reduce using rule 43 (exp -> INT .)
+    MINUS           reduce using rule 43 (exp -> INT .)
+    STAR            reduce using rule 43 (exp -> INT .)
+    DIV             reduce using rule 43 (exp -> INT .)
+    UMINUS          reduce using rule 43 (exp -> INT .)
+    MINUS_ID        reduce using rule 43 (exp -> INT .)
+    RC              reduce using rule 43 (exp -> INT .)
+
+
+state 32
+
+    (44) exp -> DOUBLE .
+
+    S               reduce using rule 44 (exp -> DOUBLE .)
+    AND             reduce using rule 44 (exp -> DOUBLE .)
+    OR              reduce using rule 44 (exp -> DOUBLE .)
+    EQ              reduce using rule 44 (exp -> DOUBLE .)
+    MIN             reduce using rule 44 (exp -> DOUBLE .)
+    MAJ             reduce using rule 44 (exp -> DOUBLE .)
+    MAJ_EQ          reduce using rule 44 (exp -> DOUBLE .)
+    MIN_EQ          reduce using rule 44 (exp -> DOUBLE .)
+    PLUS            reduce using rule 44 (exp -> DOUBLE .)
+    MINUS           reduce using rule 44 (exp -> DOUBLE .)
+    STAR            reduce using rule 44 (exp -> DOUBLE .)
+    DIV             reduce using rule 44 (exp -> DOUBLE .)
+    UMINUS          reduce using rule 44 (exp -> DOUBLE .)
+    MINUS_ID        reduce using rule 44 (exp -> DOUBLE .)
+    RC              reduce using rule 44 (exp -> DOUBLE .)
+
+
+state 33
 
     (13) stmt -> BO stmt_list . BC
     (6) stmt_list -> stmt_list . stmt
@@ -718,13 +810,11 @@ state 31
     (11) stmt -> . assignment
     (12) stmt -> . PRINT exp S
     (13) stmt -> . BO stmt_list BC
-    (14) assignment -> . id S
-    (15) assignment -> . id EQ exp S
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (14) assignment -> . id EQ exp S
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
-    BC              shift and go to state 57
+    BC              shift and go to state 61
     IF              shift and go to state 8
     ELSE            shift and go to state 9
     WHILE           shift and go to state 10
@@ -736,64 +826,100 @@ state 31
     assignment                     shift and go to state 11
     id                             shift and go to state 16
 
-state 32
+state 34
 
-    (14) assignment -> id S .
-
-    IF              reduce using rule 14 (assignment -> id S .)
-    ELSE            reduce using rule 14 (assignment -> id S .)
-    WHILE           reduce using rule 14 (assignment -> id S .)
-    PRINT           reduce using rule 14 (assignment -> id S .)
-    BO              reduce using rule 14 (assignment -> id S .)
-    ID              reduce using rule 14 (assignment -> id S .)
-    $end            reduce using rule 14 (assignment -> id S .)
-    BC              reduce using rule 14 (assignment -> id S .)
-
-
-state 33
-
-    (15) assignment -> id EQ . exp S
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (14) assignment -> id EQ . exp S
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
     ID              shift and go to state 17
 
     id                             shift and go to state 30
-    exp                            shift and go to state 58
-
-state 34
-
-    (24) id -> ID SO . INT SC
-    (25) id -> ID SO . ID SC
-
-    INT             shift and go to state 60
-    ID              shift and go to state 59
-
+    exp                            shift and go to state 62
 
 state 35
+
+    (26) id -> ID id_array .
+
+    EQ              reduce using rule 26 (id -> ID id_array .)
+    S               reduce using rule 26 (id -> ID id_array .)
+    AND             reduce using rule 26 (id -> ID id_array .)
+    OR              reduce using rule 26 (id -> ID id_array .)
+    MIN             reduce using rule 26 (id -> ID id_array .)
+    MAJ             reduce using rule 26 (id -> ID id_array .)
+    MAJ_EQ          reduce using rule 26 (id -> ID id_array .)
+    MIN_EQ          reduce using rule 26 (id -> ID id_array .)
+    PLUS            reduce using rule 26 (id -> ID id_array .)
+    MINUS           reduce using rule 26 (id -> ID id_array .)
+    STAR            reduce using rule 26 (id -> ID id_array .)
+    DIV             reduce using rule 26 (id -> ID id_array .)
+    UMINUS          reduce using rule 26 (id -> ID id_array .)
+    MINUS_ID        reduce using rule 26 (id -> ID id_array .)
+    RC              reduce using rule 26 (id -> ID id_array .)
+    SC              reduce using rule 26 (id -> ID id_array .)
+
+
+state 36
+
+    (22) id_array -> SO . INT SC id_array
+    (23) id_array -> SO . id SC id_array
+    (25) id -> . ID
+    (26) id -> . ID id_array
+
+    INT             shift and go to state 63
+    ID              shift and go to state 17
+
+    id                             shift and go to state 64
+
+state 37
+
+    (24) id_array -> empty .
+
+    EQ              reduce using rule 24 (id_array -> empty .)
+    S               reduce using rule 24 (id_array -> empty .)
+    AND             reduce using rule 24 (id_array -> empty .)
+    OR              reduce using rule 24 (id_array -> empty .)
+    MIN             reduce using rule 24 (id_array -> empty .)
+    MAJ             reduce using rule 24 (id_array -> empty .)
+    MAJ_EQ          reduce using rule 24 (id_array -> empty .)
+    MIN_EQ          reduce using rule 24 (id_array -> empty .)
+    PLUS            reduce using rule 24 (id_array -> empty .)
+    MINUS           reduce using rule 24 (id_array -> empty .)
+    STAR            reduce using rule 24 (id_array -> empty .)
+    DIV             reduce using rule 24 (id_array -> empty .)
+    UMINUS          reduce using rule 24 (id_array -> empty .)
+    MINUS_ID        reduce using rule 24 (id_array -> empty .)
+    RC              reduce using rule 24 (id_array -> empty .)
+    SC              reduce using rule 24 (id_array -> empty .)
+
+
+state 38
 
     (5) decl -> type var_list S .
 
@@ -807,101 +933,105 @@ state 35
     ID              reduce using rule 5 (decl -> type var_list S .)
 
 
-state 36
+state 39
 
-    (19) var_list -> var_list CM . var
-    (20) var -> . ID array
+    (18) var_list -> var_list CM . var
+    (19) var -> . ID array
 
     ID              shift and go to state 21
 
-    var                            shift and go to state 61
-
-state 37
-
-    (20) var -> ID array .
-    (22) array -> array . SO INT SC
-
-    S               reduce using rule 20 (var -> ID array .)
-    CM              reduce using rule 20 (var -> ID array .)
-    SO              shift and go to state 62
-
-
-state 38
-
-    (21) array -> empty .
-
-    SO              reduce using rule 21 (array -> empty .)
-    S               reduce using rule 21 (array -> empty .)
-    CM              reduce using rule 21 (array -> empty .)
-
-
-state 39
-
-    (8) stmt -> IF RO exp . RC stmt
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
-
-    RC              shift and go to state 63
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
-
+    var                            shift and go to state 65
 
 state 40
 
-    (10) stmt -> WHILE RO exp . RC stmt
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
+    (19) var -> ID array .
 
-    RC              shift and go to state 64
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+    S               reduce using rule 19 (var -> ID array .)
+    CM              reduce using rule 19 (var -> ID array .)
 
 
 state 41
+
+    (20) array -> empty .
+
+    S               reduce using rule 20 (array -> empty .)
+    CM              reduce using rule 20 (array -> empty .)
+
+
+state 42
+
+    (21) array -> SO . INT SC array
+
+    INT             shift and go to state 66
+
+
+state 43
+
+    (8) stmt -> IF RO exp . RC stmt
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
+
+    RC              shift and go to state 67
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
+
+
+state 44
+
+    (10) stmt -> WHILE RO exp . RC stmt
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
+
+    RC              shift and go to state 68
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
+
+
+state 45
 
     (12) stmt -> PRINT exp S .
 
@@ -915,144 +1045,38 @@ state 41
     BC              reduce using rule 12 (stmt -> PRINT exp S .)
 
 
-state 42
-
-    (26) exp -> exp AND . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
-
-    NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
-    ID              shift and go to state 17
-
-    exp                            shift and go to state 65
-    id                             shift and go to state 30
-
-state 43
-
-    (27) exp -> exp OR . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
-
-    NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
-    ID              shift and go to state 17
-
-    exp                            shift and go to state 66
-    id                             shift and go to state 30
-
-state 44
-
-    (29) exp -> exp EQ . EQ exp
-
-    EQ              shift and go to state 67
-
-
-state 45
-
-    (30) exp -> exp MIN . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
-
-    NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
-    ID              shift and go to state 17
-
-    exp                            shift and go to state 68
-    id                             shift and go to state 30
-
 state 46
 
-    (31) exp -> exp MAJ . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (27) exp -> exp AND . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
     ID              shift and go to state 17
 
     exp                            shift and go to state 69
@@ -1060,33 +1084,36 @@ state 46
 
 state 47
 
-    (32) exp -> exp MAJ_EQ . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (28) exp -> exp OR . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
     ID              shift and go to state 17
 
     exp                            shift and go to state 70
@@ -1094,67 +1121,43 @@ state 47
 
 state 48
 
-    (33) exp -> exp MIN_EQ . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (30) exp -> exp EQ . EQ exp
 
-    NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
-    ID              shift and go to state 17
+    EQ              shift and go to state 71
 
-    exp                            shift and go to state 71
-    id                             shift and go to state 30
 
 state 49
 
-    (34) exp -> exp PLUS . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (31) exp -> exp MIN . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
     ID              shift and go to state 17
 
     exp                            shift and go to state 72
@@ -1162,33 +1165,36 @@ state 49
 
 state 50
 
-    (35) exp -> exp MINUS . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (32) exp -> exp MAJ . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
     ID              shift and go to state 17
 
     exp                            shift and go to state 73
@@ -1196,33 +1202,36 @@ state 50
 
 state 51
 
-    (36) exp -> exp STAR . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (33) exp -> exp MAJ_EQ . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
     ID              shift and go to state 17
 
     exp                            shift and go to state 74
@@ -1230,33 +1239,36 @@ state 51
 
 state 52
 
-    (37) exp -> exp DIV . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (34) exp -> exp MIN_EQ . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
     ID              shift and go to state 17
 
     exp                            shift and go to state 75
@@ -1264,62 +1276,210 @@ state 52
 
 state 53
 
-    (39) exp -> exp INT .
+    (35) exp -> exp PLUS . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
-    S               reduce using rule 39 (exp -> exp INT .)
-    AND             reduce using rule 39 (exp -> exp INT .)
-    OR              reduce using rule 39 (exp -> exp INT .)
-    EQ              reduce using rule 39 (exp -> exp INT .)
-    MIN             reduce using rule 39 (exp -> exp INT .)
-    MAJ             reduce using rule 39 (exp -> exp INT .)
-    MAJ_EQ          reduce using rule 39 (exp -> exp INT .)
-    MIN_EQ          reduce using rule 39 (exp -> exp INT .)
-    PLUS            reduce using rule 39 (exp -> exp INT .)
-    MINUS           reduce using rule 39 (exp -> exp INT .)
-    STAR            reduce using rule 39 (exp -> exp INT .)
-    DIV             reduce using rule 39 (exp -> exp INT .)
-    INT             reduce using rule 39 (exp -> exp INT .)
-    DOUBLE          reduce using rule 39 (exp -> exp INT .)
-    RC              reduce using rule 39 (exp -> exp INT .)
+    NOT             shift and go to state 26
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
+    ID              shift and go to state 17
 
+    exp                            shift and go to state 76
+    id                             shift and go to state 30
 
 state 54
 
-    (40) exp -> exp DOUBLE .
+    (36) exp -> exp MINUS . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
-    S               reduce using rule 40 (exp -> exp DOUBLE .)
-    AND             reduce using rule 40 (exp -> exp DOUBLE .)
-    OR              reduce using rule 40 (exp -> exp DOUBLE .)
-    EQ              reduce using rule 40 (exp -> exp DOUBLE .)
-    MIN             reduce using rule 40 (exp -> exp DOUBLE .)
-    MAJ             reduce using rule 40 (exp -> exp DOUBLE .)
-    MAJ_EQ          reduce using rule 40 (exp -> exp DOUBLE .)
-    MIN_EQ          reduce using rule 40 (exp -> exp DOUBLE .)
-    PLUS            reduce using rule 40 (exp -> exp DOUBLE .)
-    MINUS           reduce using rule 40 (exp -> exp DOUBLE .)
-    STAR            reduce using rule 40 (exp -> exp DOUBLE .)
-    DIV             reduce using rule 40 (exp -> exp DOUBLE .)
-    INT             reduce using rule 40 (exp -> exp DOUBLE .)
-    DOUBLE          reduce using rule 40 (exp -> exp DOUBLE .)
-    RC              reduce using rule 40 (exp -> exp DOUBLE .)
+    NOT             shift and go to state 26
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
+    ID              shift and go to state 17
 
+    exp                            shift and go to state 77
+    id                             shift and go to state 30
 
 state 55
 
-    (28) exp -> NOT exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
+    (37) exp -> exp STAR . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
+
+    NOT             shift and go to state 26
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
+    ID              shift and go to state 17
+
+    exp                            shift and go to state 78
+    id                             shift and go to state 30
+
+state 56
+
+    (38) exp -> exp DIV . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
+
+    NOT             shift and go to state 26
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
+    ID              shift and go to state 17
+
+    exp                            shift and go to state 79
+    id                             shift and go to state 30
+
+state 57
+
+    (39) exp -> exp UMINUS .
+
+    S               reduce using rule 39 (exp -> exp UMINUS .)
+    AND             reduce using rule 39 (exp -> exp UMINUS .)
+    OR              reduce using rule 39 (exp -> exp UMINUS .)
+    EQ              reduce using rule 39 (exp -> exp UMINUS .)
+    MIN             reduce using rule 39 (exp -> exp UMINUS .)
+    MAJ             reduce using rule 39 (exp -> exp UMINUS .)
+    MAJ_EQ          reduce using rule 39 (exp -> exp UMINUS .)
+    MIN_EQ          reduce using rule 39 (exp -> exp UMINUS .)
+    PLUS            reduce using rule 39 (exp -> exp UMINUS .)
+    MINUS           reduce using rule 39 (exp -> exp UMINUS .)
+    STAR            reduce using rule 39 (exp -> exp UMINUS .)
+    DIV             reduce using rule 39 (exp -> exp UMINUS .)
+    UMINUS          reduce using rule 39 (exp -> exp UMINUS .)
+    MINUS_ID        reduce using rule 39 (exp -> exp UMINUS .)
+    RC              reduce using rule 39 (exp -> exp UMINUS .)
+
+
+state 58
+
+    (40) exp -> exp MINUS_ID .
+
+    S               reduce using rule 40 (exp -> exp MINUS_ID .)
+    AND             reduce using rule 40 (exp -> exp MINUS_ID .)
+    OR              reduce using rule 40 (exp -> exp MINUS_ID .)
+    EQ              reduce using rule 40 (exp -> exp MINUS_ID .)
+    MIN             reduce using rule 40 (exp -> exp MINUS_ID .)
+    MAJ             reduce using rule 40 (exp -> exp MINUS_ID .)
+    MAJ_EQ          reduce using rule 40 (exp -> exp MINUS_ID .)
+    MIN_EQ          reduce using rule 40 (exp -> exp MINUS_ID .)
+    PLUS            reduce using rule 40 (exp -> exp MINUS_ID .)
+    MINUS           reduce using rule 40 (exp -> exp MINUS_ID .)
+    STAR            reduce using rule 40 (exp -> exp MINUS_ID .)
+    DIV             reduce using rule 40 (exp -> exp MINUS_ID .)
+    UMINUS          reduce using rule 40 (exp -> exp MINUS_ID .)
+    MINUS_ID        reduce using rule 40 (exp -> exp MINUS_ID .)
+    RC              reduce using rule 40 (exp -> exp MINUS_ID .)
+
+
+state 59
+
+    (29) exp -> NOT exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
@@ -1332,73 +1492,73 @@ state 55
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STAR resolved as shift
   ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 28 (exp -> NOT exp .)
-    RC              reduce using rule 28 (exp -> NOT exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+  ! shift/reduce conflict for UMINUS resolved as shift
+  ! shift/reduce conflict for MINUS_ID resolved as shift
+    S               reduce using rule 29 (exp -> NOT exp .)
+    RC              reduce using rule 29 (exp -> NOT exp .)
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
 
-  ! AND             [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! OR              [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! EQ              [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! MIN             [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! MAJ             [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! MAJ_EQ          [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! MIN_EQ          [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! PLUS            [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! MINUS           [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! STAR            [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! DIV             [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! INT             [ reduce using rule 28 (exp -> NOT exp .) ]
-  ! DOUBLE          [ reduce using rule 28 (exp -> NOT exp .) ]
-
-
-state 56
-
-    (38) exp -> RO exp . RC
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
-
-    RC              shift and go to state 76
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+  ! AND             [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! OR              [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! EQ              [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! MIN             [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! MAJ             [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! MAJ_EQ          [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! MIN_EQ          [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! PLUS            [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! MINUS           [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! STAR            [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! DIV             [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! UMINUS          [ reduce using rule 29 (exp -> NOT exp .) ]
+  ! MINUS_ID        [ reduce using rule 29 (exp -> NOT exp .) ]
 
 
-state 57
+state 60
+
+    (41) exp -> RO exp . RC
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
+
+    RC              shift and go to state 80
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
+
+
+state 61
 
     (13) stmt -> BO stmt_list BC .
 
@@ -1412,69 +1572,69 @@ state 57
     BC              reduce using rule 13 (stmt -> BO stmt_list BC .)
 
 
-state 58
-
-    (15) assignment -> id EQ exp . S
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
-
-    S               shift and go to state 77
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
-
-
-state 59
-
-    (25) id -> ID SO ID . SC
-
-    SC              shift and go to state 78
-
-
-state 60
-
-    (24) id -> ID SO INT . SC
-
-    SC              shift and go to state 79
-
-
-state 61
-
-    (19) var_list -> var_list CM var .
-
-    S               reduce using rule 19 (var_list -> var_list CM var .)
-    CM              reduce using rule 19 (var_list -> var_list CM var .)
-
-
 state 62
 
-    (22) array -> array SO . INT SC
+    (14) assignment -> id EQ exp . S
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
-    INT             shift and go to state 80
+    S               shift and go to state 81
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
 
 
 state 63
+
+    (22) id_array -> SO INT . SC id_array
+
+    SC              shift and go to state 82
+
+
+state 64
+
+    (23) id_array -> SO id . SC id_array
+
+    SC              shift and go to state 83
+
+
+state 65
+
+    (18) var_list -> var_list CM var .
+
+    S               reduce using rule 18 (var_list -> var_list CM var .)
+    CM              reduce using rule 18 (var_list -> var_list CM var .)
+
+
+state 66
+
+    (21) array -> SO INT . SC array
+
+    SC              shift and go to state 84
+
+
+state 67
 
     (8) stmt -> IF RO exp RC . stmt
     (8) stmt -> . IF RO exp RC stmt
@@ -1483,11 +1643,9 @@ state 63
     (11) stmt -> . assignment
     (12) stmt -> . PRINT exp S
     (13) stmt -> . BO stmt_list BC
-    (14) assignment -> . id S
-    (15) assignment -> . id EQ exp S
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (14) assignment -> . id EQ exp S
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     IF              shift and go to state 8
     ELSE            shift and go to state 9
@@ -1496,11 +1654,11 @@ state 63
     BO              shift and go to state 13
     ID              shift and go to state 17
 
-    stmt                           shift and go to state 81
+    stmt                           shift and go to state 85
     assignment                     shift and go to state 11
     id                             shift and go to state 16
 
-state 64
+state 68
 
     (10) stmt -> WHILE RO exp RC . stmt
     (8) stmt -> . IF RO exp RC stmt
@@ -1509,11 +1667,9 @@ state 64
     (11) stmt -> . assignment
     (12) stmt -> . PRINT exp S
     (13) stmt -> . BO stmt_list BC
-    (14) assignment -> . id S
-    (15) assignment -> . id EQ exp S
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
+    (14) assignment -> . id EQ exp S
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
     IF              shift and go to state 8
     ELSE            shift and go to state 9
@@ -1522,243 +1678,26 @@ state 64
     BO              shift and go to state 13
     ID              shift and go to state 17
 
-    stmt                           shift and go to state 82
+    stmt                           shift and go to state 86
     assignment                     shift and go to state 11
     id                             shift and go to state 16
 
-state 65
-
-    (26) exp -> exp AND exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
-
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for EQ resolved as shift
-  ! shift/reduce conflict for MIN resolved as shift
-  ! shift/reduce conflict for MAJ resolved as shift
-  ! shift/reduce conflict for MAJ_EQ resolved as shift
-  ! shift/reduce conflict for MIN_EQ resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for STAR resolved as shift
-  ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 26 (exp -> exp AND exp .)
-    RC              reduce using rule 26 (exp -> exp AND exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
-
-  ! AND             [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! OR              [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! EQ              [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! MIN             [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! MAJ             [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! MAJ_EQ          [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! MIN_EQ          [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! PLUS            [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! MINUS           [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! STAR            [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! DIV             [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! INT             [ reduce using rule 26 (exp -> exp AND exp .) ]
-  ! DOUBLE          [ reduce using rule 26 (exp -> exp AND exp .) ]
-
-
-state 66
-
-    (27) exp -> exp OR exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
-
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for EQ resolved as shift
-  ! shift/reduce conflict for MIN resolved as shift
-  ! shift/reduce conflict for MAJ resolved as shift
-  ! shift/reduce conflict for MAJ_EQ resolved as shift
-  ! shift/reduce conflict for MIN_EQ resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for STAR resolved as shift
-  ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 27 (exp -> exp OR exp .)
-    RC              reduce using rule 27 (exp -> exp OR exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
-
-  ! AND             [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! OR              [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! EQ              [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! MIN             [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! MAJ             [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! MAJ_EQ          [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! MIN_EQ          [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! PLUS            [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! MINUS           [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! STAR            [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! DIV             [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! INT             [ reduce using rule 27 (exp -> exp OR exp .) ]
-  ! DOUBLE          [ reduce using rule 27 (exp -> exp OR exp .) ]
-
-
-state 67
-
-    (29) exp -> exp EQ EQ . exp
-    (26) exp -> . exp AND exp
-    (27) exp -> . exp OR exp
-    (28) exp -> . NOT exp
-    (29) exp -> . exp EQ EQ exp
-    (30) exp -> . exp MIN exp
-    (31) exp -> . exp MAJ exp
-    (32) exp -> . exp MAJ_EQ exp
-    (33) exp -> . exp MIN_EQ exp
-    (34) exp -> . exp PLUS exp
-    (35) exp -> . exp MINUS exp
-    (36) exp -> . exp STAR exp
-    (37) exp -> . exp DIV exp
-    (38) exp -> . RO exp RC
-    (39) exp -> . exp INT
-    (40) exp -> . exp DOUBLE
-    (41) exp -> . id
-    (42) exp -> . INT
-    (43) exp -> . DOUBLE
-    (23) id -> . ID
-    (24) id -> . ID SO INT SC
-    (25) id -> . ID SO ID SC
-
-    NOT             shift and go to state 26
-    RO              shift and go to state 27
-    INT             shift and go to state 28
-    DOUBLE          shift and go to state 29
-    ID              shift and go to state 17
-
-    exp                            shift and go to state 83
-    id                             shift and go to state 30
-
-state 68
-
-    (30) exp -> exp MIN exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
-
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for EQ resolved as shift
-  ! shift/reduce conflict for MIN resolved as shift
-  ! shift/reduce conflict for MAJ resolved as shift
-  ! shift/reduce conflict for MAJ_EQ resolved as shift
-  ! shift/reduce conflict for MIN_EQ resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for STAR resolved as shift
-  ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 30 (exp -> exp MIN exp .)
-    RC              reduce using rule 30 (exp -> exp MIN exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
-
-  ! AND             [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! OR              [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! EQ              [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! MIN             [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! MAJ             [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! MAJ_EQ          [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! MIN_EQ          [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! PLUS            [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! MINUS           [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! STAR            [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! DIV             [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! INT             [ reduce using rule 30 (exp -> exp MIN exp .) ]
-  ! DOUBLE          [ reduce using rule 30 (exp -> exp MIN exp .) ]
-
-
 state 69
 
-    (31) exp -> exp MAJ exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
+    (27) exp -> exp AND exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
@@ -1771,55 +1710,55 @@ state 69
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STAR resolved as shift
   ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 31 (exp -> exp MAJ exp .)
-    RC              reduce using rule 31 (exp -> exp MAJ exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+  ! shift/reduce conflict for UMINUS resolved as shift
+  ! shift/reduce conflict for MINUS_ID resolved as shift
+    S               reduce using rule 27 (exp -> exp AND exp .)
+    RC              reduce using rule 27 (exp -> exp AND exp .)
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
 
-  ! AND             [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! OR              [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! EQ              [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! MIN             [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! MAJ             [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! MAJ_EQ          [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! MIN_EQ          [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! PLUS            [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! MINUS           [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! STAR            [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! DIV             [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! INT             [ reduce using rule 31 (exp -> exp MAJ exp .) ]
-  ! DOUBLE          [ reduce using rule 31 (exp -> exp MAJ exp .) ]
+  ! AND             [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! OR              [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! EQ              [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! MIN             [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! MAJ             [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! MAJ_EQ          [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! MIN_EQ          [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! PLUS            [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! MINUS           [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! STAR            [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! DIV             [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! UMINUS          [ reduce using rule 27 (exp -> exp AND exp .) ]
+  ! MINUS_ID        [ reduce using rule 27 (exp -> exp AND exp .) ]
 
 
 state 70
 
-    (32) exp -> exp MAJ_EQ exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
+    (28) exp -> exp OR exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
@@ -1832,116 +1771,92 @@ state 70
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STAR resolved as shift
   ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 32 (exp -> exp MAJ_EQ exp .)
-    RC              reduce using rule 32 (exp -> exp MAJ_EQ exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+  ! shift/reduce conflict for UMINUS resolved as shift
+  ! shift/reduce conflict for MINUS_ID resolved as shift
+    S               reduce using rule 28 (exp -> exp OR exp .)
+    RC              reduce using rule 28 (exp -> exp OR exp .)
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
 
-  ! AND             [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! OR              [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! EQ              [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! MIN             [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! MAJ             [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! MAJ_EQ          [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! MIN_EQ          [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! PLUS            [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! MINUS           [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! STAR            [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! DIV             [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! INT             [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
-  ! DOUBLE          [ reduce using rule 32 (exp -> exp MAJ_EQ exp .) ]
+  ! AND             [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! OR              [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! EQ              [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! MIN             [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! MAJ             [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! MAJ_EQ          [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! MIN_EQ          [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! PLUS            [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! MINUS           [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! STAR            [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! DIV             [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! UMINUS          [ reduce using rule 28 (exp -> exp OR exp .) ]
+  ! MINUS_ID        [ reduce using rule 28 (exp -> exp OR exp .) ]
 
 
 state 71
 
-    (33) exp -> exp MIN_EQ exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
+    (30) exp -> exp EQ EQ . exp
+    (27) exp -> . exp AND exp
+    (28) exp -> . exp OR exp
+    (29) exp -> . NOT exp
+    (30) exp -> . exp EQ EQ exp
+    (31) exp -> . exp MIN exp
+    (32) exp -> . exp MAJ exp
+    (33) exp -> . exp MAJ_EQ exp
+    (34) exp -> . exp MIN_EQ exp
+    (35) exp -> . exp PLUS exp
+    (36) exp -> . exp MINUS exp
+    (37) exp -> . exp STAR exp
+    (38) exp -> . exp DIV exp
+    (39) exp -> . exp UMINUS
+    (40) exp -> . exp MINUS_ID
+    (41) exp -> . RO exp RC
+    (42) exp -> . id
+    (43) exp -> . INT
+    (44) exp -> . DOUBLE
+    (45) exp -> . UMINUS
+    (46) exp -> . MINUS_ID
+    (25) id -> . ID
+    (26) id -> . ID id_array
 
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for EQ resolved as shift
-  ! shift/reduce conflict for MIN resolved as shift
-  ! shift/reduce conflict for MAJ resolved as shift
-  ! shift/reduce conflict for MAJ_EQ resolved as shift
-  ! shift/reduce conflict for MIN_EQ resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for STAR resolved as shift
-  ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 33 (exp -> exp MIN_EQ exp .)
-    RC              reduce using rule 33 (exp -> exp MIN_EQ exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+    NOT             shift and go to state 26
+    RO              shift and go to state 29
+    INT             shift and go to state 31
+    DOUBLE          shift and go to state 32
+    UMINUS          shift and go to state 27
+    MINUS_ID        shift and go to state 28
+    ID              shift and go to state 17
 
-  ! AND             [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! OR              [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! EQ              [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! MIN             [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! MAJ             [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! MAJ_EQ          [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! MIN_EQ          [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! PLUS            [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! MINUS           [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! STAR            [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! DIV             [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! INT             [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-  ! DOUBLE          [ reduce using rule 33 (exp -> exp MIN_EQ exp .) ]
-
+    exp                            shift and go to state 87
+    id                             shift and go to state 30
 
 state 72
 
-    (34) exp -> exp PLUS exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
+    (31) exp -> exp MIN exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
@@ -1954,55 +1869,55 @@ state 72
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STAR resolved as shift
   ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 34 (exp -> exp PLUS exp .)
-    RC              reduce using rule 34 (exp -> exp PLUS exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+  ! shift/reduce conflict for UMINUS resolved as shift
+  ! shift/reduce conflict for MINUS_ID resolved as shift
+    S               reduce using rule 31 (exp -> exp MIN exp .)
+    RC              reduce using rule 31 (exp -> exp MIN exp .)
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
 
-  ! AND             [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! OR              [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! EQ              [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! MIN             [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! MAJ             [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! MAJ_EQ          [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! MIN_EQ          [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! PLUS            [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! MINUS           [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! STAR            [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! DIV             [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! INT             [ reduce using rule 34 (exp -> exp PLUS exp .) ]
-  ! DOUBLE          [ reduce using rule 34 (exp -> exp PLUS exp .) ]
+  ! AND             [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! OR              [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! EQ              [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! MIN             [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! MAJ             [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! MAJ_EQ          [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! MIN_EQ          [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! PLUS            [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! MINUS           [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! STAR            [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! DIV             [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! UMINUS          [ reduce using rule 31 (exp -> exp MIN exp .) ]
+  ! MINUS_ID        [ reduce using rule 31 (exp -> exp MIN exp .) ]
 
 
 state 73
 
-    (35) exp -> exp MINUS exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
+    (32) exp -> exp MAJ exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
@@ -2015,55 +1930,55 @@ state 73
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STAR resolved as shift
   ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 35 (exp -> exp MINUS exp .)
-    RC              reduce using rule 35 (exp -> exp MINUS exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+  ! shift/reduce conflict for UMINUS resolved as shift
+  ! shift/reduce conflict for MINUS_ID resolved as shift
+    S               reduce using rule 32 (exp -> exp MAJ exp .)
+    RC              reduce using rule 32 (exp -> exp MAJ exp .)
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
 
-  ! AND             [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! OR              [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! EQ              [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! MIN             [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! MAJ             [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! MAJ_EQ          [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! MIN_EQ          [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! PLUS            [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! MINUS           [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! STAR            [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! DIV             [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! INT             [ reduce using rule 35 (exp -> exp MINUS exp .) ]
-  ! DOUBLE          [ reduce using rule 35 (exp -> exp MINUS exp .) ]
+  ! AND             [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! OR              [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! EQ              [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! MIN             [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! MAJ             [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! MAJ_EQ          [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! MIN_EQ          [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! PLUS            [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! MINUS           [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! STAR            [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! DIV             [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! UMINUS          [ reduce using rule 32 (exp -> exp MAJ exp .) ]
+  ! MINUS_ID        [ reduce using rule 32 (exp -> exp MAJ exp .) ]
 
 
 state 74
 
-    (36) exp -> exp STAR exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
+    (33) exp -> exp MAJ_EQ exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
@@ -2076,55 +1991,55 @@ state 74
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STAR resolved as shift
   ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 36 (exp -> exp STAR exp .)
-    RC              reduce using rule 36 (exp -> exp STAR exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+  ! shift/reduce conflict for UMINUS resolved as shift
+  ! shift/reduce conflict for MINUS_ID resolved as shift
+    S               reduce using rule 33 (exp -> exp MAJ_EQ exp .)
+    RC              reduce using rule 33 (exp -> exp MAJ_EQ exp .)
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
 
-  ! AND             [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! OR              [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! EQ              [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! MIN             [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! MAJ             [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! MAJ_EQ          [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! MIN_EQ          [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! PLUS            [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! MINUS           [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! STAR            [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! DIV             [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! INT             [ reduce using rule 36 (exp -> exp STAR exp .) ]
-  ! DOUBLE          [ reduce using rule 36 (exp -> exp STAR exp .) ]
+  ! AND             [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! OR              [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! EQ              [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! MIN             [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! MAJ             [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! MAJ_EQ          [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! MIN_EQ          [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! PLUS            [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! MINUS           [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! STAR            [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! DIV             [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! UMINUS          [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
+  ! MINUS_ID        [ reduce using rule 33 (exp -> exp MAJ_EQ exp .) ]
 
 
 state 75
 
-    (37) exp -> exp DIV exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
+    (34) exp -> exp MIN_EQ exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
@@ -2137,124 +2052,339 @@ state 75
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STAR resolved as shift
   ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 37 (exp -> exp DIV exp .)
-    RC              reduce using rule 37 (exp -> exp DIV exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+  ! shift/reduce conflict for UMINUS resolved as shift
+  ! shift/reduce conflict for MINUS_ID resolved as shift
+    S               reduce using rule 34 (exp -> exp MIN_EQ exp .)
+    RC              reduce using rule 34 (exp -> exp MIN_EQ exp .)
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
 
-  ! AND             [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! OR              [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! EQ              [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! MIN             [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! MAJ             [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! MAJ_EQ          [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! MIN_EQ          [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! PLUS            [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! MINUS           [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! STAR            [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! DIV             [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! INT             [ reduce using rule 37 (exp -> exp DIV exp .) ]
-  ! DOUBLE          [ reduce using rule 37 (exp -> exp DIV exp .) ]
+  ! AND             [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! OR              [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! EQ              [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! MIN             [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! MAJ             [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! MAJ_EQ          [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! MIN_EQ          [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! PLUS            [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! MINUS           [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! STAR            [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! DIV             [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! UMINUS          [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
+  ! MINUS_ID        [ reduce using rule 34 (exp -> exp MIN_EQ exp .) ]
 
 
 state 76
 
-    (38) exp -> RO exp RC .
+    (35) exp -> exp PLUS exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
-    S               reduce using rule 38 (exp -> RO exp RC .)
-    AND             reduce using rule 38 (exp -> RO exp RC .)
-    OR              reduce using rule 38 (exp -> RO exp RC .)
-    EQ              reduce using rule 38 (exp -> RO exp RC .)
-    MIN             reduce using rule 38 (exp -> RO exp RC .)
-    MAJ             reduce using rule 38 (exp -> RO exp RC .)
-    MAJ_EQ          reduce using rule 38 (exp -> RO exp RC .)
-    MIN_EQ          reduce using rule 38 (exp -> RO exp RC .)
-    PLUS            reduce using rule 38 (exp -> RO exp RC .)
-    MINUS           reduce using rule 38 (exp -> RO exp RC .)
-    STAR            reduce using rule 38 (exp -> RO exp RC .)
-    DIV             reduce using rule 38 (exp -> RO exp RC .)
-    INT             reduce using rule 38 (exp -> RO exp RC .)
-    DOUBLE          reduce using rule 38 (exp -> RO exp RC .)
-    RC              reduce using rule 38 (exp -> RO exp RC .)
+    S               reduce using rule 35 (exp -> exp PLUS exp .)
+    AND             reduce using rule 35 (exp -> exp PLUS exp .)
+    OR              reduce using rule 35 (exp -> exp PLUS exp .)
+    EQ              reduce using rule 35 (exp -> exp PLUS exp .)
+    MIN             reduce using rule 35 (exp -> exp PLUS exp .)
+    MAJ             reduce using rule 35 (exp -> exp PLUS exp .)
+    MAJ_EQ          reduce using rule 35 (exp -> exp PLUS exp .)
+    MIN_EQ          reduce using rule 35 (exp -> exp PLUS exp .)
+    PLUS            reduce using rule 35 (exp -> exp PLUS exp .)
+    MINUS           reduce using rule 35 (exp -> exp PLUS exp .)
+    MINUS_ID        reduce using rule 35 (exp -> exp PLUS exp .)
+    RC              reduce using rule 35 (exp -> exp PLUS exp .)
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+
+  ! STAR            [ reduce using rule 35 (exp -> exp PLUS exp .) ]
+  ! DIV             [ reduce using rule 35 (exp -> exp PLUS exp .) ]
+  ! UMINUS          [ reduce using rule 35 (exp -> exp PLUS exp .) ]
+  ! AND             [ shift and go to state 46 ]
+  ! OR              [ shift and go to state 47 ]
+  ! EQ              [ shift and go to state 48 ]
+  ! MIN             [ shift and go to state 49 ]
+  ! MAJ             [ shift and go to state 50 ]
+  ! MAJ_EQ          [ shift and go to state 51 ]
+  ! MIN_EQ          [ shift and go to state 52 ]
+  ! PLUS            [ shift and go to state 53 ]
+  ! MINUS           [ shift and go to state 54 ]
+  ! MINUS_ID        [ shift and go to state 58 ]
 
 
 state 77
 
-    (15) assignment -> id EQ exp S .
+    (36) exp -> exp MINUS exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
-    IF              reduce using rule 15 (assignment -> id EQ exp S .)
-    ELSE            reduce using rule 15 (assignment -> id EQ exp S .)
-    WHILE           reduce using rule 15 (assignment -> id EQ exp S .)
-    PRINT           reduce using rule 15 (assignment -> id EQ exp S .)
-    BO              reduce using rule 15 (assignment -> id EQ exp S .)
-    ID              reduce using rule 15 (assignment -> id EQ exp S .)
-    $end            reduce using rule 15 (assignment -> id EQ exp S .)
-    BC              reduce using rule 15 (assignment -> id EQ exp S .)
+    S               reduce using rule 36 (exp -> exp MINUS exp .)
+    AND             reduce using rule 36 (exp -> exp MINUS exp .)
+    OR              reduce using rule 36 (exp -> exp MINUS exp .)
+    EQ              reduce using rule 36 (exp -> exp MINUS exp .)
+    MIN             reduce using rule 36 (exp -> exp MINUS exp .)
+    MAJ             reduce using rule 36 (exp -> exp MINUS exp .)
+    MAJ_EQ          reduce using rule 36 (exp -> exp MINUS exp .)
+    MIN_EQ          reduce using rule 36 (exp -> exp MINUS exp .)
+    PLUS            reduce using rule 36 (exp -> exp MINUS exp .)
+    MINUS           reduce using rule 36 (exp -> exp MINUS exp .)
+    MINUS_ID        reduce using rule 36 (exp -> exp MINUS exp .)
+    RC              reduce using rule 36 (exp -> exp MINUS exp .)
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+
+  ! STAR            [ reduce using rule 36 (exp -> exp MINUS exp .) ]
+  ! DIV             [ reduce using rule 36 (exp -> exp MINUS exp .) ]
+  ! UMINUS          [ reduce using rule 36 (exp -> exp MINUS exp .) ]
+  ! AND             [ shift and go to state 46 ]
+  ! OR              [ shift and go to state 47 ]
+  ! EQ              [ shift and go to state 48 ]
+  ! MIN             [ shift and go to state 49 ]
+  ! MAJ             [ shift and go to state 50 ]
+  ! MAJ_EQ          [ shift and go to state 51 ]
+  ! MIN_EQ          [ shift and go to state 52 ]
+  ! PLUS            [ shift and go to state 53 ]
+  ! MINUS           [ shift and go to state 54 ]
+  ! MINUS_ID        [ shift and go to state 58 ]
 
 
 state 78
 
-    (25) id -> ID SO ID SC .
+    (37) exp -> exp STAR exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
-    S               reduce using rule 25 (id -> ID SO ID SC .)
-    EQ              reduce using rule 25 (id -> ID SO ID SC .)
-    AND             reduce using rule 25 (id -> ID SO ID SC .)
-    OR              reduce using rule 25 (id -> ID SO ID SC .)
-    MIN             reduce using rule 25 (id -> ID SO ID SC .)
-    MAJ             reduce using rule 25 (id -> ID SO ID SC .)
-    MAJ_EQ          reduce using rule 25 (id -> ID SO ID SC .)
-    MIN_EQ          reduce using rule 25 (id -> ID SO ID SC .)
-    PLUS            reduce using rule 25 (id -> ID SO ID SC .)
-    MINUS           reduce using rule 25 (id -> ID SO ID SC .)
-    STAR            reduce using rule 25 (id -> ID SO ID SC .)
-    DIV             reduce using rule 25 (id -> ID SO ID SC .)
-    INT             reduce using rule 25 (id -> ID SO ID SC .)
-    DOUBLE          reduce using rule 25 (id -> ID SO ID SC .)
-    RC              reduce using rule 25 (id -> ID SO ID SC .)
+    S               reduce using rule 37 (exp -> exp STAR exp .)
+    AND             reduce using rule 37 (exp -> exp STAR exp .)
+    OR              reduce using rule 37 (exp -> exp STAR exp .)
+    EQ              reduce using rule 37 (exp -> exp STAR exp .)
+    MIN             reduce using rule 37 (exp -> exp STAR exp .)
+    MAJ             reduce using rule 37 (exp -> exp STAR exp .)
+    MAJ_EQ          reduce using rule 37 (exp -> exp STAR exp .)
+    MIN_EQ          reduce using rule 37 (exp -> exp STAR exp .)
+    PLUS            reduce using rule 37 (exp -> exp STAR exp .)
+    MINUS           reduce using rule 37 (exp -> exp STAR exp .)
+    STAR            reduce using rule 37 (exp -> exp STAR exp .)
+    DIV             reduce using rule 37 (exp -> exp STAR exp .)
+    MINUS_ID        reduce using rule 37 (exp -> exp STAR exp .)
+    RC              reduce using rule 37 (exp -> exp STAR exp .)
+    UMINUS          shift and go to state 57
+
+  ! UMINUS          [ reduce using rule 37 (exp -> exp STAR exp .) ]
+  ! AND             [ shift and go to state 46 ]
+  ! OR              [ shift and go to state 47 ]
+  ! EQ              [ shift and go to state 48 ]
+  ! MIN             [ shift and go to state 49 ]
+  ! MAJ             [ shift and go to state 50 ]
+  ! MAJ_EQ          [ shift and go to state 51 ]
+  ! MIN_EQ          [ shift and go to state 52 ]
+  ! PLUS            [ shift and go to state 53 ]
+  ! MINUS           [ shift and go to state 54 ]
+  ! STAR            [ shift and go to state 55 ]
+  ! DIV             [ shift and go to state 56 ]
+  ! MINUS_ID        [ shift and go to state 58 ]
 
 
 state 79
 
-    (24) id -> ID SO INT SC .
+    (38) exp -> exp DIV exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
-    S               reduce using rule 24 (id -> ID SO INT SC .)
-    EQ              reduce using rule 24 (id -> ID SO INT SC .)
-    AND             reduce using rule 24 (id -> ID SO INT SC .)
-    OR              reduce using rule 24 (id -> ID SO INT SC .)
-    MIN             reduce using rule 24 (id -> ID SO INT SC .)
-    MAJ             reduce using rule 24 (id -> ID SO INT SC .)
-    MAJ_EQ          reduce using rule 24 (id -> ID SO INT SC .)
-    MIN_EQ          reduce using rule 24 (id -> ID SO INT SC .)
-    PLUS            reduce using rule 24 (id -> ID SO INT SC .)
-    MINUS           reduce using rule 24 (id -> ID SO INT SC .)
-    STAR            reduce using rule 24 (id -> ID SO INT SC .)
-    DIV             reduce using rule 24 (id -> ID SO INT SC .)
-    INT             reduce using rule 24 (id -> ID SO INT SC .)
-    DOUBLE          reduce using rule 24 (id -> ID SO INT SC .)
-    RC              reduce using rule 24 (id -> ID SO INT SC .)
+    S               reduce using rule 38 (exp -> exp DIV exp .)
+    AND             reduce using rule 38 (exp -> exp DIV exp .)
+    OR              reduce using rule 38 (exp -> exp DIV exp .)
+    EQ              reduce using rule 38 (exp -> exp DIV exp .)
+    MIN             reduce using rule 38 (exp -> exp DIV exp .)
+    MAJ             reduce using rule 38 (exp -> exp DIV exp .)
+    MAJ_EQ          reduce using rule 38 (exp -> exp DIV exp .)
+    MIN_EQ          reduce using rule 38 (exp -> exp DIV exp .)
+    PLUS            reduce using rule 38 (exp -> exp DIV exp .)
+    MINUS           reduce using rule 38 (exp -> exp DIV exp .)
+    STAR            reduce using rule 38 (exp -> exp DIV exp .)
+    DIV             reduce using rule 38 (exp -> exp DIV exp .)
+    MINUS_ID        reduce using rule 38 (exp -> exp DIV exp .)
+    RC              reduce using rule 38 (exp -> exp DIV exp .)
+    UMINUS          shift and go to state 57
+
+  ! UMINUS          [ reduce using rule 38 (exp -> exp DIV exp .) ]
+  ! AND             [ shift and go to state 46 ]
+  ! OR              [ shift and go to state 47 ]
+  ! EQ              [ shift and go to state 48 ]
+  ! MIN             [ shift and go to state 49 ]
+  ! MAJ             [ shift and go to state 50 ]
+  ! MAJ_EQ          [ shift and go to state 51 ]
+  ! MIN_EQ          [ shift and go to state 52 ]
+  ! PLUS            [ shift and go to state 53 ]
+  ! MINUS           [ shift and go to state 54 ]
+  ! STAR            [ shift and go to state 55 ]
+  ! DIV             [ shift and go to state 56 ]
+  ! MINUS_ID        [ shift and go to state 58 ]
 
 
 state 80
 
-    (22) array -> array SO INT . SC
+    (41) exp -> RO exp RC .
 
-    SC              shift and go to state 84
+    S               reduce using rule 41 (exp -> RO exp RC .)
+    AND             reduce using rule 41 (exp -> RO exp RC .)
+    OR              reduce using rule 41 (exp -> RO exp RC .)
+    EQ              reduce using rule 41 (exp -> RO exp RC .)
+    MIN             reduce using rule 41 (exp -> RO exp RC .)
+    MAJ             reduce using rule 41 (exp -> RO exp RC .)
+    MAJ_EQ          reduce using rule 41 (exp -> RO exp RC .)
+    MIN_EQ          reduce using rule 41 (exp -> RO exp RC .)
+    PLUS            reduce using rule 41 (exp -> RO exp RC .)
+    MINUS           reduce using rule 41 (exp -> RO exp RC .)
+    STAR            reduce using rule 41 (exp -> RO exp RC .)
+    DIV             reduce using rule 41 (exp -> RO exp RC .)
+    UMINUS          reduce using rule 41 (exp -> RO exp RC .)
+    MINUS_ID        reduce using rule 41 (exp -> RO exp RC .)
+    RC              reduce using rule 41 (exp -> RO exp RC .)
 
 
 state 81
+
+    (14) assignment -> id EQ exp S .
+
+    IF              reduce using rule 14 (assignment -> id EQ exp S .)
+    ELSE            reduce using rule 14 (assignment -> id EQ exp S .)
+    WHILE           reduce using rule 14 (assignment -> id EQ exp S .)
+    PRINT           reduce using rule 14 (assignment -> id EQ exp S .)
+    BO              reduce using rule 14 (assignment -> id EQ exp S .)
+    ID              reduce using rule 14 (assignment -> id EQ exp S .)
+    $end            reduce using rule 14 (assignment -> id EQ exp S .)
+    BC              reduce using rule 14 (assignment -> id EQ exp S .)
+
+
+state 82
+
+    (22) id_array -> SO INT SC . id_array
+    (22) id_array -> . SO INT SC id_array
+    (23) id_array -> . SO id SC id_array
+    (24) id_array -> . empty
+    (4) empty -> .
+
+    SO              shift and go to state 36
+    EQ              reduce using rule 4 (empty -> .)
+    S               reduce using rule 4 (empty -> .)
+    AND             reduce using rule 4 (empty -> .)
+    OR              reduce using rule 4 (empty -> .)
+    MIN             reduce using rule 4 (empty -> .)
+    MAJ             reduce using rule 4 (empty -> .)
+    MAJ_EQ          reduce using rule 4 (empty -> .)
+    MIN_EQ          reduce using rule 4 (empty -> .)
+    PLUS            reduce using rule 4 (empty -> .)
+    MINUS           reduce using rule 4 (empty -> .)
+    STAR            reduce using rule 4 (empty -> .)
+    DIV             reduce using rule 4 (empty -> .)
+    UMINUS          reduce using rule 4 (empty -> .)
+    MINUS_ID        reduce using rule 4 (empty -> .)
+    RC              reduce using rule 4 (empty -> .)
+    SC              reduce using rule 4 (empty -> .)
+
+    id_array                       shift and go to state 88
+    empty                          shift and go to state 37
+
+state 83
+
+    (23) id_array -> SO id SC . id_array
+    (22) id_array -> . SO INT SC id_array
+    (23) id_array -> . SO id SC id_array
+    (24) id_array -> . empty
+    (4) empty -> .
+
+    SO              shift and go to state 36
+    EQ              reduce using rule 4 (empty -> .)
+    S               reduce using rule 4 (empty -> .)
+    AND             reduce using rule 4 (empty -> .)
+    OR              reduce using rule 4 (empty -> .)
+    MIN             reduce using rule 4 (empty -> .)
+    MAJ             reduce using rule 4 (empty -> .)
+    MAJ_EQ          reduce using rule 4 (empty -> .)
+    MIN_EQ          reduce using rule 4 (empty -> .)
+    PLUS            reduce using rule 4 (empty -> .)
+    MINUS           reduce using rule 4 (empty -> .)
+    STAR            reduce using rule 4 (empty -> .)
+    DIV             reduce using rule 4 (empty -> .)
+    UMINUS          reduce using rule 4 (empty -> .)
+    MINUS_ID        reduce using rule 4 (empty -> .)
+    RC              reduce using rule 4 (empty -> .)
+    SC              reduce using rule 4 (empty -> .)
+
+    id_array                       shift and go to state 89
+    empty                          shift and go to state 37
+
+state 84
+
+    (21) array -> SO INT SC . array
+    (20) array -> . empty
+    (21) array -> . SO INT SC array
+    (4) empty -> .
+
+    SO              shift and go to state 42
+    S               reduce using rule 4 (empty -> .)
+    CM              reduce using rule 4 (empty -> .)
+
+    array                          shift and go to state 90
+    empty                          shift and go to state 41
+
+state 85
 
     (8) stmt -> IF RO exp RC stmt .
 
@@ -2268,7 +2398,7 @@ state 81
     BC              reduce using rule 8 (stmt -> IF RO exp RC stmt .)
 
 
-state 82
+state 86
 
     (10) stmt -> WHILE RO exp RC stmt .
 
@@ -2282,22 +2412,22 @@ state 82
     BC              reduce using rule 10 (stmt -> WHILE RO exp RC stmt .)
 
 
-state 83
+state 87
 
-    (29) exp -> exp EQ EQ exp .
-    (26) exp -> exp . AND exp
-    (27) exp -> exp . OR exp
-    (29) exp -> exp . EQ EQ exp
-    (30) exp -> exp . MIN exp
-    (31) exp -> exp . MAJ exp
-    (32) exp -> exp . MAJ_EQ exp
-    (33) exp -> exp . MIN_EQ exp
-    (34) exp -> exp . PLUS exp
-    (35) exp -> exp . MINUS exp
-    (36) exp -> exp . STAR exp
-    (37) exp -> exp . DIV exp
-    (39) exp -> exp . INT
-    (40) exp -> exp . DOUBLE
+    (30) exp -> exp EQ EQ exp .
+    (27) exp -> exp . AND exp
+    (28) exp -> exp . OR exp
+    (30) exp -> exp . EQ EQ exp
+    (31) exp -> exp . MIN exp
+    (32) exp -> exp . MAJ exp
+    (33) exp -> exp . MAJ_EQ exp
+    (34) exp -> exp . MIN_EQ exp
+    (35) exp -> exp . PLUS exp
+    (36) exp -> exp . MINUS exp
+    (37) exp -> exp . STAR exp
+    (38) exp -> exp . DIV exp
+    (39) exp -> exp . UMINUS
+    (40) exp -> exp . MINUS_ID
 
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
@@ -2310,102 +2440,106 @@ state 83
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for STAR resolved as shift
   ! shift/reduce conflict for DIV resolved as shift
-  ! shift/reduce conflict for INT resolved as shift
-  ! shift/reduce conflict for DOUBLE resolved as shift
-    S               reduce using rule 29 (exp -> exp EQ EQ exp .)
-    RC              reduce using rule 29 (exp -> exp EQ EQ exp .)
-    AND             shift and go to state 42
-    OR              shift and go to state 43
-    EQ              shift and go to state 44
-    MIN             shift and go to state 45
-    MAJ             shift and go to state 46
-    MAJ_EQ          shift and go to state 47
-    MIN_EQ          shift and go to state 48
-    PLUS            shift and go to state 49
-    MINUS           shift and go to state 50
-    STAR            shift and go to state 51
-    DIV             shift and go to state 52
-    INT             shift and go to state 53
-    DOUBLE          shift and go to state 54
+  ! shift/reduce conflict for UMINUS resolved as shift
+  ! shift/reduce conflict for MINUS_ID resolved as shift
+    S               reduce using rule 30 (exp -> exp EQ EQ exp .)
+    RC              reduce using rule 30 (exp -> exp EQ EQ exp .)
+    AND             shift and go to state 46
+    OR              shift and go to state 47
+    EQ              shift and go to state 48
+    MIN             shift and go to state 49
+    MAJ             shift and go to state 50
+    MAJ_EQ          shift and go to state 51
+    MIN_EQ          shift and go to state 52
+    PLUS            shift and go to state 53
+    MINUS           shift and go to state 54
+    STAR            shift and go to state 55
+    DIV             shift and go to state 56
+    UMINUS          shift and go to state 57
+    MINUS_ID        shift and go to state 58
 
-  ! AND             [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! OR              [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! EQ              [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! MIN             [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! MAJ             [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! MAJ_EQ          [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! MIN_EQ          [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! PLUS            [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! MINUS           [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! STAR            [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! DIV             [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! INT             [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
-  ! DOUBLE          [ reduce using rule 29 (exp -> exp EQ EQ exp .) ]
+  ! AND             [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! OR              [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! EQ              [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! MIN             [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! MAJ             [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! MAJ_EQ          [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! MIN_EQ          [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! PLUS            [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! MINUS           [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! STAR            [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! DIV             [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! UMINUS          [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
+  ! MINUS_ID        [ reduce using rule 30 (exp -> exp EQ EQ exp .) ]
 
 
-state 84
+state 88
 
-    (22) array -> array SO INT SC .
+    (22) id_array -> SO INT SC id_array .
 
-    SO              reduce using rule 22 (array -> array SO INT SC .)
-    S               reduce using rule 22 (array -> array SO INT SC .)
-    CM              reduce using rule 22 (array -> array SO INT SC .)
+    EQ              reduce using rule 22 (id_array -> SO INT SC id_array .)
+    S               reduce using rule 22 (id_array -> SO INT SC id_array .)
+    AND             reduce using rule 22 (id_array -> SO INT SC id_array .)
+    OR              reduce using rule 22 (id_array -> SO INT SC id_array .)
+    MIN             reduce using rule 22 (id_array -> SO INT SC id_array .)
+    MAJ             reduce using rule 22 (id_array -> SO INT SC id_array .)
+    MAJ_EQ          reduce using rule 22 (id_array -> SO INT SC id_array .)
+    MIN_EQ          reduce using rule 22 (id_array -> SO INT SC id_array .)
+    PLUS            reduce using rule 22 (id_array -> SO INT SC id_array .)
+    MINUS           reduce using rule 22 (id_array -> SO INT SC id_array .)
+    STAR            reduce using rule 22 (id_array -> SO INT SC id_array .)
+    DIV             reduce using rule 22 (id_array -> SO INT SC id_array .)
+    UMINUS          reduce using rule 22 (id_array -> SO INT SC id_array .)
+    MINUS_ID        reduce using rule 22 (id_array -> SO INT SC id_array .)
+    RC              reduce using rule 22 (id_array -> SO INT SC id_array .)
+    SC              reduce using rule 22 (id_array -> SO INT SC id_array .)
+
+
+state 89
+
+    (23) id_array -> SO id SC id_array .
+
+    EQ              reduce using rule 23 (id_array -> SO id SC id_array .)
+    S               reduce using rule 23 (id_array -> SO id SC id_array .)
+    AND             reduce using rule 23 (id_array -> SO id SC id_array .)
+    OR              reduce using rule 23 (id_array -> SO id SC id_array .)
+    MIN             reduce using rule 23 (id_array -> SO id SC id_array .)
+    MAJ             reduce using rule 23 (id_array -> SO id SC id_array .)
+    MAJ_EQ          reduce using rule 23 (id_array -> SO id SC id_array .)
+    MIN_EQ          reduce using rule 23 (id_array -> SO id SC id_array .)
+    PLUS            reduce using rule 23 (id_array -> SO id SC id_array .)
+    MINUS           reduce using rule 23 (id_array -> SO id SC id_array .)
+    STAR            reduce using rule 23 (id_array -> SO id SC id_array .)
+    DIV             reduce using rule 23 (id_array -> SO id SC id_array .)
+    UMINUS          reduce using rule 23 (id_array -> SO id SC id_array .)
+    MINUS_ID        reduce using rule 23 (id_array -> SO id SC id_array .)
+    RC              reduce using rule 23 (id_array -> SO id SC id_array .)
+    SC              reduce using rule 23 (id_array -> SO id SC id_array .)
+
+
+state 90
+
+    (21) array -> SO INT SC array .
+
+    S               reduce using rule 21 (array -> SO INT SC array .)
+    CM              reduce using rule 21 (array -> SO INT SC array .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for AND in state 55 resolved as shift
-WARNING: shift/reduce conflict for OR in state 55 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 55 resolved as shift
-WARNING: shift/reduce conflict for MIN in state 55 resolved as shift
-WARNING: shift/reduce conflict for MAJ in state 55 resolved as shift
-WARNING: shift/reduce conflict for MAJ_EQ in state 55 resolved as shift
-WARNING: shift/reduce conflict for MIN_EQ in state 55 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 55 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 55 resolved as shift
-WARNING: shift/reduce conflict for STAR in state 55 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 55 resolved as shift
-WARNING: shift/reduce conflict for INT in state 55 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 55 resolved as shift
-WARNING: shift/reduce conflict for AND in state 65 resolved as shift
-WARNING: shift/reduce conflict for OR in state 65 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 65 resolved as shift
-WARNING: shift/reduce conflict for MIN in state 65 resolved as shift
-WARNING: shift/reduce conflict for MAJ in state 65 resolved as shift
-WARNING: shift/reduce conflict for MAJ_EQ in state 65 resolved as shift
-WARNING: shift/reduce conflict for MIN_EQ in state 65 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 65 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 65 resolved as shift
-WARNING: shift/reduce conflict for STAR in state 65 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 65 resolved as shift
-WARNING: shift/reduce conflict for INT in state 65 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 65 resolved as shift
-WARNING: shift/reduce conflict for AND in state 66 resolved as shift
-WARNING: shift/reduce conflict for OR in state 66 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 66 resolved as shift
-WARNING: shift/reduce conflict for MIN in state 66 resolved as shift
-WARNING: shift/reduce conflict for MAJ in state 66 resolved as shift
-WARNING: shift/reduce conflict for MAJ_EQ in state 66 resolved as shift
-WARNING: shift/reduce conflict for MIN_EQ in state 66 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 66 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 66 resolved as shift
-WARNING: shift/reduce conflict for STAR in state 66 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 66 resolved as shift
-WARNING: shift/reduce conflict for INT in state 66 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 66 resolved as shift
-WARNING: shift/reduce conflict for AND in state 68 resolved as shift
-WARNING: shift/reduce conflict for OR in state 68 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 68 resolved as shift
-WARNING: shift/reduce conflict for MIN in state 68 resolved as shift
-WARNING: shift/reduce conflict for MAJ in state 68 resolved as shift
-WARNING: shift/reduce conflict for MAJ_EQ in state 68 resolved as shift
-WARNING: shift/reduce conflict for MIN_EQ in state 68 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 68 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 68 resolved as shift
-WARNING: shift/reduce conflict for STAR in state 68 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 68 resolved as shift
-WARNING: shift/reduce conflict for INT in state 68 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 68 resolved as shift
+WARNING: shift/reduce conflict for AND in state 59 resolved as shift
+WARNING: shift/reduce conflict for OR in state 59 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 59 resolved as shift
+WARNING: shift/reduce conflict for MIN in state 59 resolved as shift
+WARNING: shift/reduce conflict for MAJ in state 59 resolved as shift
+WARNING: shift/reduce conflict for MAJ_EQ in state 59 resolved as shift
+WARNING: shift/reduce conflict for MIN_EQ in state 59 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 59 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 59 resolved as shift
+WARNING: shift/reduce conflict for STAR in state 59 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 59 resolved as shift
+WARNING: shift/reduce conflict for UMINUS in state 59 resolved as shift
+WARNING: shift/reduce conflict for MINUS_ID in state 59 resolved as shift
 WARNING: shift/reduce conflict for AND in state 69 resolved as shift
 WARNING: shift/reduce conflict for OR in state 69 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 69 resolved as shift
@@ -2417,8 +2551,8 @@ WARNING: shift/reduce conflict for PLUS in state 69 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 69 resolved as shift
 WARNING: shift/reduce conflict for STAR in state 69 resolved as shift
 WARNING: shift/reduce conflict for DIV in state 69 resolved as shift
-WARNING: shift/reduce conflict for INT in state 69 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 69 resolved as shift
+WARNING: shift/reduce conflict for UMINUS in state 69 resolved as shift
+WARNING: shift/reduce conflict for MINUS_ID in state 69 resolved as shift
 WARNING: shift/reduce conflict for AND in state 70 resolved as shift
 WARNING: shift/reduce conflict for OR in state 70 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 70 resolved as shift
@@ -2430,21 +2564,8 @@ WARNING: shift/reduce conflict for PLUS in state 70 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 70 resolved as shift
 WARNING: shift/reduce conflict for STAR in state 70 resolved as shift
 WARNING: shift/reduce conflict for DIV in state 70 resolved as shift
-WARNING: shift/reduce conflict for INT in state 70 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 70 resolved as shift
-WARNING: shift/reduce conflict for AND in state 71 resolved as shift
-WARNING: shift/reduce conflict for OR in state 71 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 71 resolved as shift
-WARNING: shift/reduce conflict for MIN in state 71 resolved as shift
-WARNING: shift/reduce conflict for MAJ in state 71 resolved as shift
-WARNING: shift/reduce conflict for MAJ_EQ in state 71 resolved as shift
-WARNING: shift/reduce conflict for MIN_EQ in state 71 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 71 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 71 resolved as shift
-WARNING: shift/reduce conflict for STAR in state 71 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 71 resolved as shift
-WARNING: shift/reduce conflict for INT in state 71 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 71 resolved as shift
+WARNING: shift/reduce conflict for UMINUS in state 70 resolved as shift
+WARNING: shift/reduce conflict for MINUS_ID in state 70 resolved as shift
 WARNING: shift/reduce conflict for AND in state 72 resolved as shift
 WARNING: shift/reduce conflict for OR in state 72 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 72 resolved as shift
@@ -2456,8 +2577,8 @@ WARNING: shift/reduce conflict for PLUS in state 72 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 72 resolved as shift
 WARNING: shift/reduce conflict for STAR in state 72 resolved as shift
 WARNING: shift/reduce conflict for DIV in state 72 resolved as shift
-WARNING: shift/reduce conflict for INT in state 72 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 72 resolved as shift
+WARNING: shift/reduce conflict for UMINUS in state 72 resolved as shift
+WARNING: shift/reduce conflict for MINUS_ID in state 72 resolved as shift
 WARNING: shift/reduce conflict for AND in state 73 resolved as shift
 WARNING: shift/reduce conflict for OR in state 73 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 73 resolved as shift
@@ -2469,8 +2590,8 @@ WARNING: shift/reduce conflict for PLUS in state 73 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 73 resolved as shift
 WARNING: shift/reduce conflict for STAR in state 73 resolved as shift
 WARNING: shift/reduce conflict for DIV in state 73 resolved as shift
-WARNING: shift/reduce conflict for INT in state 73 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 73 resolved as shift
+WARNING: shift/reduce conflict for UMINUS in state 73 resolved as shift
+WARNING: shift/reduce conflict for MINUS_ID in state 73 resolved as shift
 WARNING: shift/reduce conflict for AND in state 74 resolved as shift
 WARNING: shift/reduce conflict for OR in state 74 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 74 resolved as shift
@@ -2482,8 +2603,8 @@ WARNING: shift/reduce conflict for PLUS in state 74 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 74 resolved as shift
 WARNING: shift/reduce conflict for STAR in state 74 resolved as shift
 WARNING: shift/reduce conflict for DIV in state 74 resolved as shift
-WARNING: shift/reduce conflict for INT in state 74 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 74 resolved as shift
+WARNING: shift/reduce conflict for UMINUS in state 74 resolved as shift
+WARNING: shift/reduce conflict for MINUS_ID in state 74 resolved as shift
 WARNING: shift/reduce conflict for AND in state 75 resolved as shift
 WARNING: shift/reduce conflict for OR in state 75 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 75 resolved as shift
@@ -2495,18 +2616,21 @@ WARNING: shift/reduce conflict for PLUS in state 75 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 75 resolved as shift
 WARNING: shift/reduce conflict for STAR in state 75 resolved as shift
 WARNING: shift/reduce conflict for DIV in state 75 resolved as shift
-WARNING: shift/reduce conflict for INT in state 75 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 75 resolved as shift
-WARNING: shift/reduce conflict for AND in state 83 resolved as shift
-WARNING: shift/reduce conflict for OR in state 83 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 83 resolved as shift
-WARNING: shift/reduce conflict for MIN in state 83 resolved as shift
-WARNING: shift/reduce conflict for MAJ in state 83 resolved as shift
-WARNING: shift/reduce conflict for MAJ_EQ in state 83 resolved as shift
-WARNING: shift/reduce conflict for MIN_EQ in state 83 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 83 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 83 resolved as shift
-WARNING: shift/reduce conflict for STAR in state 83 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 83 resolved as shift
-WARNING: shift/reduce conflict for INT in state 83 resolved as shift
-WARNING: shift/reduce conflict for DOUBLE in state 83 resolved as shift
+WARNING: shift/reduce conflict for UMINUS in state 75 resolved as shift
+WARNING: shift/reduce conflict for MINUS_ID in state 75 resolved as shift
+WARNING: shift/reduce conflict for AND in state 87 resolved as shift
+WARNING: shift/reduce conflict for OR in state 87 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 87 resolved as shift
+WARNING: shift/reduce conflict for MIN in state 87 resolved as shift
+WARNING: shift/reduce conflict for MAJ in state 87 resolved as shift
+WARNING: shift/reduce conflict for MAJ_EQ in state 87 resolved as shift
+WARNING: shift/reduce conflict for MIN_EQ in state 87 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 87 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 87 resolved as shift
+WARNING: shift/reduce conflict for STAR in state 87 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 87 resolved as shift
+WARNING: shift/reduce conflict for UMINUS in state 87 resolved as shift
+WARNING: shift/reduce conflict for MINUS_ID in state 87 resolved as shift
+WARNING: reduce/reduce conflict in state 17 resolved using rule (empty -> <empty>)
+WARNING: rejected rule (id -> ID) in state 17
+WARNING: Rule (id -> ID) is never reduced
