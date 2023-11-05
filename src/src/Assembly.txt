@@ -19,7 +19,8 @@ L1:	EVAL	pos	0	>		/*	while	(line	18)	*/
 GOTOF	L2
 EVAL	0	
 ASS	i
-L3:EVALipos1- <	/*while(line20)*/	GOTOF	L4
+L3:EVALipos1- <	/*while(line20)*/	
+GOTOF	L4
 EVAL	i	1	+
 ASS	j
 EVAL	x[i]	x[j]	>	/*	if	(line	22)	*/
@@ -38,7 +39,8 @@ ASS	pos
 GOTO	L1
 L2:	EVAL	0
 ASS	i
-L6:	EVAL	i	5	<	/*	while	(line	35)	*/	GOTOF	L7
+L6:	EVAL	i	5	<	/*	while	(line	35)	*/	
+GOTOF	L7
 PRINT	x[i]
 EVAL	i	1	+
 ASS	i

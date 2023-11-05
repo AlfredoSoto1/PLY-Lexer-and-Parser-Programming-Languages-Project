@@ -7,21 +7,49 @@ with open('src/Test_program.txt', 'r') as source_file:
     # Obtain the source code from source file
     source_code = source_file.read() 
 
+
 source_code = """
-int x, y, z;
-int b[2][2][2];
-double a;
-a = 10;
-b[1][1][1] = 0;
+double x[5];
+int i, j;
+double swap;
+int pos;
 
-x = 10;
-y = 20;
-z = 30;
+// vector initialization
+x[0] = -2.0;
+x[1] = -3.0;
+x[2] = 3.0;
+x[3] = 5.0;
+x[4] = 2.5;
 
-// a = a-1;
-// a = a - 1;
-// a = a + a + -a + -1;
-// a = a + - 1; // not compile
+// Bubble sort
+pos = 5;
+while (pos > 0) {
+  i = 0;
+  while (i < pos - 1){
+    j = i + 1;
+    if (x[i] > x[j]){
+      swap = x[j];
+      x[j] = x[i];
+      x[i] = swap;
+    }
+    i = i + 1;
+  }
+  pos = pos-1;
+
+}
+
+// if ( pos > 0) {
+//   x[0] = 3.4;
+// } else {
+//   x[0] = 3.7;
+// }
+
+// Print Results
+i = 0;
+while(i<5){
+  print x[i];
+  i = i + 1;
+ }
 """
 
 # --- Lexer machine parameters implementation ---
@@ -66,7 +94,6 @@ tokens = [
     'PLUS',     # +
     'MINUS',    # -
     'UMINUS',   # unitary minus (-)
-    'MINUS_ID', # unitary minus on IDs (-)
     'STAR',     # *
     'DIV',      # /
     'CM',       # ,
@@ -108,11 +135,6 @@ def t_NEWLINE(t):
     # calculate line number
     t.lexer.lineno += len(t.value)
     pass
-
-def t_MINUS_ID(t):
-    r'\-[a-zA-Z][a-zA-Z0-9]*'
-    t.value = t.value[1:]  # Remove the minus sign  
-    return t
 
 def t_ID(t):
     r'[a-zA-Z][a-zA-Z0-9]*'
@@ -163,6 +185,7 @@ print('--------------Parser stage----------------')
 
 # --- Parser machine implementation ---
 
+label_count = 0
 assembly_code = []
 
 def generate_array_index_code(index_array):
@@ -172,13 +195,17 @@ def generate_array_index_code(index_array):
     return array_indices
 
 precedence = (
+    ('nonassoc', 'MIN', 'MAJ', 'MIN_EQ', 'MAJ_EQ'),  # Nonassociative operators
     ('left', 'PLUS', 'MINUS'),
     ('left', 'STAR', 'DIV'),
     ('right', 'UMINUS'),
+    ('nonassoc', 'RO', 'RC')
 )
 
 def p_prog(p):
     '''prog : decl_list stmt_list'''
+    for instructions in p[2]:
+        print(instructions)
     pass
 
 def p_decl_list(p):
@@ -193,37 +220,92 @@ def p_empty(p):
 
 def p_decl(p):
     '''decl : type var_list S'''
-    for variable in p[2]:
-        assembly_code.append(f'{p[1]} {variable[0]}{generate_array_index_code(variable)}')
+    # for variable in p[2]:
+    #     if isinstance(variable, list):
+    #         assembly_code.append(f'{p[1]} {variable[0]}{generate_array_index_code(variable)}')
+    #     else:
+    #         assembly_code.append(f'{p[1]} {variable}')
     pass
 
 def p_stmt_list(p):
     '''stmt_list : stmt_list stmt
         | stmt
     '''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = p[1] + [p[2]]
     pass
 
 def p_stmt(p):
-    '''stmt : IF RO exp RC stmt
-        | ELSE stmt
-        | WHILE RO exp RC stmt
-        | assignment
-        | PRINT exp S
-        | BO stmt_list BC
+    '''stmt : if_stmt
+            | while_stmt
+            | block_stmt
+            | print_stmt
+            | assignment
     '''
+    p[0] = p[1] # pass the statement up
+    pass
+
+def p_if_stmt(p):
+    '''if_stmt : IF RO exp RC stmt
+               | IF RO exp RC stmt ELSE stmt
+    '''
+    if_statement_list = ''
+    if len(p) == 6:
+        if isinstance(p[5], list):
+            for statement in p[5]:
+                if_statement_list += str(statement) + '\n'
+            if_statement_list = if_statement_list.rstrip("\n") # remove last new line
+        else:
+            if_statement_list = p[5]
+
+    global label_count
+    p[0] = f'EVAL {p[3]} \nGOTOF L{label_count + 1} \n{if_statement_list} \nL{label_count + 1}:'
+    label_count += 2
+    pass
+
+def p_while_stmt(p):
+    '''while_stmt : WHILE RO exp RC stmt
+    '''
+    while_statement_list = ''
+    if isinstance(p[5], list):
+        for statement in p[5]:
+            while_statement_list += str(statement) + '\n'
+        while_statement_list = while_statement_list.rstrip("\n") # remove last new line
+    else:
+        while_statement_list = p[5]
+
+    global label_count
+    p[0] = f'L{label_count}: EVAL {p[3]} \nGOTOF L{label_count + 1} \n{while_statement_list} \nGOTO L{label_count} \nL{label_count + 1}:'
+    label_count += 2
+    pass
+
+def p_print_stmt(p):
+    '''print_stmt : PRINT exp S
+    '''
+    p[0] = f'PRINT {p[2]}'
+    pass
+
+def p_block_stmt(p):
+    '''block_stmt : BO stmt_list BC
+    '''
+    p[0] = p[2]
     pass
 
 def p_assignment(p):
     '''assignment : id EQ exp S'''
-    id_index_array = p[1]
+
+    ass_instruction = ''
+    id_index_array =  p[1]
     if isinstance(id_index_array, list):
         # If it's an array access
-        assembly_code.append(f'EVAL {p[3]}')
-        assembly_code.append(f'ASS {id_index_array[0]}{generate_array_index_code(id_index_array)}')
+        ass_instruction = f'{id_index_array[0]}{generate_array_index_code(id_index_array)}'
     else:
         # If it's a simple identifier
-        assembly_code.append(f'EVAL {p[3]}')
-        assembly_code.append(f'ASS {id_index_array}')
+        ass_instruction = f'{id_index_array}'
+
+    p[0] = f'EVAL {p[3]} \nASS {ass_instruction}'
     pass
 
 def p_type(p):
@@ -277,9 +359,9 @@ def p_id_array(p):
     if len(p) == 5:
         # Non-empty id_array
         if p[4] is None:
-            p[0] = [p[2]]
+            p[0] = f'[{p[2]}]'
         else:
-            p[0] = [p[2]] + p[4]
+            p[0] = f'[{p[2]}] {p[4]}'
     else:
         # Empty id_array
         p[0] = None
@@ -289,41 +371,72 @@ def p_id(p):
     '''id : ID
         | ID id_array
     '''
-    if len(p) == 2:
-        # Pass the ID only
-        p[0] = p[1]
+    if p[2] is not None:
+        p[0] = f'{p[1]}{p[2]}'
     else:
-        if p[2] is not None:
-            p[0] = [p[1]] + p[2]
-        else:
-            p[0] = [p[1]]
+        p[0] = f'{p[1]}'
     pass
 
 def p_exp(p):
-    '''exp : exp AND exp
+    '''exp : RO exp RC
+        | condition
+        | arigmethic
+        | number_id
+        | unumber_id
+    '''
+    if len(p) == 4:
+        p[0] = p[2] # --> ( exp )
+    else:
+        p[0] = p[1]
+    pass 
+
+def p_condition(p):
+    '''condition : NOT exp
         | exp OR exp
-        | NOT exp
-        | exp EQ EQ exp
+        | exp AND exp
         | exp MIN exp
         | exp MAJ exp
+        | exp EQ EQ exp
         | exp MAJ_EQ exp
         | exp MIN_EQ exp
-        | exp PLUS exp
+    '''
+    if len(p) == 3:
+        p[0] = f'{p[2]} {p[1]}'
+    elif len(p) == 4: 
+        p[0] = f'{p[3]} {p[1]} {p[2]}'
+    elif len(p) == 5: 
+        p[0] = f'{p[1]} {p[4]} =='
+    pass
+
+def p_arigmethic(p):
+    '''arigmethic : exp PLUS exp
         | exp MINUS exp
         | exp STAR exp
         | exp DIV exp
-        | exp UMINUS
-        | exp MINUS_ID
-        | RO exp RC
-        | id
+    '''
+    p[0] = f'{p[3]} {p[1]} {p[2]}'
+    pass
+
+def p_number_id(p):
+    '''number_id : id 
         | INT
         | DOUBLE
-        | UMINUS
-        | MINUS_ID
+    '''
+    p[0] = f'{p[1]}'
+    pass
+
+def p_unumber_id(p):
+    '''unumber_id : UMINUS
+        | exp UMINUS
+        | MINUS exp %prec UMINUS
     '''
     if len(p) == 2:
-        p[0] = p[1]
-    pass 
+        p[0] = f'{p[1]}'
+    elif p[1] == '-':
+        p[0] = f'0 {p[2]} -'
+    else:
+        p[0] = f'{p[1]} {p[2]} +'
+    pass
 
 def p_error(p):
     print(f"Syntax error at line {p.lineno}, position {p.lexpos}, token {p.type}")

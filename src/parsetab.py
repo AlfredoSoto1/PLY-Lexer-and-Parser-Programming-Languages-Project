@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftSTARDIVrightUMINUSAND BC BO CM COMMENT DIV DOUBLE DOUBLE_TYPE ELSE EQ ID IF INT INT_TYPE MAJ MAJ_EQ MIN MINUS MINUS_ID MIN_EQ NEWLINE NOT OR PLUS PRINT RC RO S SC SO STAR UMINUS WHILE WHITESPACEprog : decl_list stmt_listdecl_list : empty\n        | decl_list decl\n    empty :decl : type var_list Sstmt_list : stmt_list stmt\n        | stmt\n    stmt : IF RO exp RC stmt\n        | ELSE stmt\n        | WHILE RO exp RC stmt\n        | assignment\n        | PRINT exp S\n        | BO stmt_list BC\n    assignment : id EQ exp Stype : INT_TYPE\n        | DOUBLE_TYPE\n    var_list : var\n        | var_list CM var\n    var : ID arrayarray : empty\n        | SO INT SC array\n    id_array : SO INT SC id_array\n        | SO id SC id_array\n        | empty\n    id : ID\n        | ID id_array\n    exp : exp AND exp\n        | exp OR exp\n        | NOT exp\n        | exp EQ EQ exp\n        | exp MIN exp\n        | exp MAJ exp\n        | exp MAJ_EQ exp\n        | exp MIN_EQ exp\n        | exp PLUS exp\n        | exp MINUS exp\n        | exp STAR exp\n        | exp DIV exp\n        | exp UMINUS\n        | exp MINUS_ID\n        | RO exp RC\n        | id\n        | INT\n        | DOUBLE\n        | UMINUS\n        | MINUS_ID\n    '
+_lr_signature = 'nonassocMINMAJMIN_EQMAJ_EQleftPLUSMINUSleftSTARDIVrightUMINUSnonassocRORCAND BC BO CM COMMENT DIV DOUBLE DOUBLE_TYPE ELSE EQ ID IF INT INT_TYPE MAJ MAJ_EQ MIN MINUS MIN_EQ NEWLINE NOT OR PLUS PRINT RC RO S SC SO STAR UMINUS WHILE WHITESPACEprog : decl_list stmt_listdecl_list : empty\n        | decl_list decl\n    empty :decl : type var_list Sstmt_list : stmt_list stmt\n        | stmt\n    stmt : if_stmt\n            | while_stmt\n            | block_stmt\n            | print_stmt\n            | assignment\n    if_stmt : IF RO exp RC stmt\n               | IF RO exp RC stmt ELSE stmt\n    while_stmt : WHILE RO exp RC stmt\n    print_stmt : PRINT exp S\n    block_stmt : BO stmt_list BC\n    assignment : id EQ exp Stype : INT_TYPE\n        | DOUBLE_TYPE\n    var_list : var\n        | var_list CM var\n    var : ID arrayarray : empty\n        | SO INT SC array\n    id_array : SO INT SC id_array\n        | SO id SC id_array\n        | empty\n    id : ID\n        | ID id_array\n    exp : RO exp RC\n        | condition\n        | arigmethic\n        | number_id\n        | unumber_id\n    condition : NOT exp\n        | exp OR exp\n        | exp AND exp\n        | exp MIN exp\n        | exp MAJ exp\n        | exp EQ EQ exp\n        | exp MAJ_EQ exp\n        | exp MIN_EQ exp\n    arigmethic : exp PLUS exp\n        | exp MINUS exp\n        | exp STAR exp\n        | exp DIV exp\n    number_id : id \n        | INT\n        | DOUBLE\n    unumber_id : UMINUS\n        | exp UMINUS\n        | MINUS exp %prec UMINUS\n    '
     
-_lr_action_items = {'IF':([0,2,3,4,5,6,9,11,13,18,23,33,38,45,61,67,68,81,85,86,],[-4,8,-2,8,-3,-7,8,-11,8,-6,-9,8,-5,-12,-13,8,8,-14,-8,-10,]),'ELSE':([0,2,3,4,5,6,9,11,13,18,23,33,38,45,61,67,68,81,85,86,],[-4,9,-2,9,-3,-7,9,-11,9,-6,-9,9,-5,-12,-13,9,9,-14,-8,-10,]),'WHILE':([0,2,3,4,5,6,9,11,13,18,23,33,38,45,61,67,68,81,85,86,],[-4,10,-2,10,-3,-7,10,-11,10,-6,-9,10,-5,-12,-13,10,10,-14,-8,-10,]),'PRINT':([0,2,3,4,5,6,9,11,13,18,23,33,38,45,61,67,68,81,85,86,],[-4,12,-2,12,-3,-7,12,-11,12,-6,-9,12,-5,-12,-13,12,12,-14,-8,-10,]),'BO':([0,2,3,4,5,6,9,11,13,18,23,33,38,45,61,67,68,81,85,86,],[-4,13,-2,13,-3,-7,13,-11,13,-6,-9,13,-5,-12,-13,13,13,-14,-8,-10,]),'INT_TYPE':([0,2,3,5,38,],[-4,14,-2,-3,-5,]),'DOUBLE_TYPE':([0,2,3,5,38,],[-4,15,-2,-3,-5,]),'ID':([0,2,3,4,5,6,7,9,11,12,13,14,15,18,22,23,24,26,29,33,34,36,38,39,45,46,47,49,50,51,52,53,54,55,56,61,67,68,71,81,85,86,],[-4,17,-2,17,-3,-7,21,17,-11,17,17,-15,-16,-6,17,-9,17,17,17,17,17,17,-5,21,-12,17,17,17,17,17,17,17,17,17,17,-13,17,17,17,-14,-8,-10,]),'$end':([1,4,6,11,18,23,45,61,81,85,86,],[0,-1,-7,-11,-6,-9,-12,-13,-14,-8,-10,]),'BC':([6,11,18,23,33,45,61,81,85,86,],[-7,-11,-6,-9,61,-12,-13,-14,-8,-10,]),'RO':([8,10,12,22,24,26,29,34,46,47,49,50,51,52,53,54,55,56,71,],[22,24,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,]),'NOT':([12,22,24,26,29,34,46,47,49,50,51,52,53,54,55,56,71,],[26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,]),'INT':([12,22,24,26,29,34,36,42,46,47,49,50,51,52,53,54,55,56,71,],[31,31,31,31,31,31,63,66,31,31,31,31,31,31,31,31,31,31,31,]),'DOUBLE':([12,22,24,26,29,34,46,47,49,50,51,52,53,54,55,56,71,],[32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,]),'UMINUS':([12,17,22,24,25,26,27,28,29,30,31,32,34,35,37,43,44,46,47,49,50,51,52,53,54,55,56,57,58,59,60,62,69,70,71,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[27,-4,27,27,57,27,-45,-46,27,-42,-43,-44,27,-26,-24,57,57,27,27,27,27,27,27,27,27,27,27,-39,-40,57,57,57,57,57,27,57,57,57,57,57,57,57,57,-41,-4,-4,57,-22,-23,]),'MINUS_ID':([12,17,22,24,25,26,27,28,29,30,31,32,34,35,37,43,44,46,47,49,50,51,52,53,54,55,56,57,58,59,60,62,69,70,71,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[28,-4,28,28,58,28,-45,-46,28,-42,-43,-44,28,-26,-24,58,58,28,28,28,28,28,28,28,28,28,28,-39,-40,58,58,58,58,58,28,58,58,58,58,-35,-36,-37,-38,-41,-4,-4,58,-22,-23,]),'EQ':([16,17,25,27,28,30,31,32,35,37,43,44,48,57,58,59,60,62,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[34,-4,48,-45,-46,-42,-43,-44,-26,-24,48,48,71,-39,-40,48,48,48,48,48,48,48,48,48,-35,-36,-37,-38,-41,-4,-4,48,-22,-23,]),'S':([17,19,20,21,25,27,28,30,31,32,35,37,40,41,57,58,59,62,65,69,70,72,73,74,75,76,77,78,79,80,82,83,84,87,88,89,90,],[-4,38,-17,-4,45,-45,-46,-42,-43,-44,-26,-24,-19,-20,-39,-40,-29,81,-18,-27,-28,-31,-32,-33,-34,-35,-36,-37,-38,-41,-4,-4,-4,-30,-22,-23,-21,]),'AND':([17,25,27,28,30,31,32,35,37,43,44,57,58,59,60,62,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[-4,46,-45,-46,-42,-43,-44,-26,-24,46,46,-39,-40,46,46,46,46,46,46,46,46,46,-35,-36,-37,-38,-41,-4,-4,46,-22,-23,]),'OR':([17,25,27,28,30,31,32,35,37,43,44,57,58,59,60,62,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[-4,47,-45,-46,-42,-43,-44,-26,-24,47,47,-39,-40,47,47,47,47,47,47,47,47,47,-35,-36,-37,-38,-41,-4,-4,47,-22,-23,]),'MIN':([17,25,27,28,30,31,32,35,37,43,44,57,58,59,60,62,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[-4,49,-45,-46,-42,-43,-44,-26,-24,49,49,-39,-40,49,49,49,49,49,49,49,49,49,-35,-36,-37,-38,-41,-4,-4,49,-22,-23,]),'MAJ':([17,25,27,28,30,31,32,35,37,43,44,57,58,59,60,62,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[-4,50,-45,-46,-42,-43,-44,-26,-24,50,50,-39,-40,50,50,50,50,50,50,50,50,50,-35,-36,-37,-38,-41,-4,-4,50,-22,-23,]),'MAJ_EQ':([17,25,27,28,30,31,32,35,37,43,44,57,58,59,60,62,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[-4,51,-45,-46,-42,-43,-44,-26,-24,51,51,-39,-40,51,51,51,51,51,51,51,51,51,-35,-36,-37,-38,-41,-4,-4,51,-22,-23,]),'MIN_EQ':([17,25,27,28,30,31,32,35,37,43,44,57,58,59,60,62,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[-4,52,-45,-46,-42,-43,-44,-26,-24,52,52,-39,-40,52,52,52,52,52,52,52,52,52,-35,-36,-37,-38,-41,-4,-4,52,-22,-23,]),'PLUS':([17,25,27,28,30,31,32,35,37,43,44,57,58,59,60,62,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[-4,53,-45,-46,-42,-43,-44,-26,-24,53,53,-39,-40,53,53,53,53,53,53,53,53,53,-35,-36,-37,-38,-41,-4,-4,53,-22,-23,]),'MINUS':([17,25,27,28,30,31,32,35,37,43,44,57,58,59,60,62,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[-4,54,-45,-46,-42,-43,-44,-26,-24,54,54,-39,-40,54,54,54,54,54,54,54,54,54,-35,-36,-37,-38,-41,-4,-4,54,-22,-23,]),'STAR':([17,25,27,28,30,31,32,35,37,43,44,57,58,59,60,62,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[-4,55,-45,-46,-42,-43,-44,-26,-24,55,55,-39,-40,55,55,55,55,55,55,55,55,55,55,55,-37,-38,-41,-4,-4,55,-22,-23,]),'DIV':([17,25,27,28,30,31,32,35,37,43,44,57,58,59,60,62,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[-4,56,-45,-46,-42,-43,-44,-26,-24,56,56,-39,-40,56,56,56,56,56,56,56,56,56,56,56,-37,-38,-41,-4,-4,56,-22,-23,]),'RC':([17,27,28,30,31,32,35,37,43,44,57,58,59,60,69,70,72,73,74,75,76,77,78,79,80,82,83,87,88,89,],[-4,-45,-46,-42,-43,-44,-26,-24,67,68,-39,-40,-29,80,-27,-28,-31,-32,-33,-34,-35,-36,-37,-38,-41,-4,-4,-30,-22,-23,]),'SC':([17,35,37,63,64,66,82,83,88,89,],[-4,-26,-24,82,83,84,-4,-4,-22,-23,]),'SO':([17,21,82,83,84,],[36,42,36,36,42,]),'CM':([19,20,21,40,41,65,84,90,],[39,-17,-4,-19,-20,-18,-4,-21,]),}
+_lr_action_items = {'INT_TYPE':([0,2,3,5,44,],[-4,13,-2,-3,-5,]),'DOUBLE_TYPE':([0,2,3,5,44,],[-4,14,-2,-3,-5,]),'IF':([0,2,3,4,5,6,8,9,10,11,12,17,21,27,44,51,52,73,74,87,91,92,97,98,],[-4,15,-2,15,-3,-7,-8,-9,-10,-11,-12,15,-6,15,-5,-17,-16,15,15,-18,-13,-15,15,-14,]),'WHILE':([0,2,3,4,5,6,8,9,10,11,12,17,21,27,44,51,52,73,74,87,91,92,97,98,],[-4,16,-2,16,-3,-7,-8,-9,-10,-11,-12,16,-6,16,-5,-17,-16,16,16,-18,-13,-15,16,-14,]),'BO':([0,2,3,4,5,6,8,9,10,11,12,17,21,27,44,51,52,73,74,87,91,92,97,98,],[-4,17,-2,17,-3,-7,-8,-9,-10,-11,-12,17,-6,17,-5,-17,-16,17,17,-18,-13,-15,17,-14,]),'PRINT':([0,2,3,4,5,6,8,9,10,11,12,17,21,27,44,51,52,73,74,87,91,92,97,98,],[-4,18,-2,18,-3,-7,-8,-9,-10,-11,-12,18,-6,18,-5,-17,-16,18,18,-18,-13,-15,18,-14,]),'ID':([0,2,3,4,5,6,7,8,9,10,11,12,13,14,17,18,21,25,26,27,29,34,35,40,42,44,45,51,52,53,54,55,56,58,59,60,61,62,63,73,74,79,87,91,92,97,98,],[-4,20,-2,20,-3,-7,24,-8,-9,-10,-11,-12,-19,-20,20,20,-6,20,20,20,20,20,20,20,20,-5,24,-17,-16,20,20,20,20,20,20,20,20,20,20,20,20,20,-18,-13,-15,20,-14,]),'$end':([1,4,6,8,9,10,11,12,21,51,52,87,91,92,98,],[0,-1,-7,-8,-9,-10,-11,-12,-6,-17,-16,-18,-13,-15,-14,]),'BC':([6,8,9,10,11,12,21,27,51,52,87,91,92,98,],[-7,-8,-9,-10,-11,-12,-6,51,-17,-16,-18,-13,-15,-14,]),'ELSE':([8,9,10,11,12,51,52,87,91,92,98,],[-8,-9,-10,-11,-12,-17,-16,-18,-13,-15,-14,]),'RO':([15,16,18,25,26,29,34,35,40,53,54,55,56,58,59,60,61,62,63,79,],[25,26,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,]),'NOT':([18,25,26,29,34,35,40,53,54,55,56,58,59,60,61,62,63,79,],[34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,]),'INT':([18,25,26,29,34,35,40,42,48,53,54,55,56,58,59,60,61,62,63,79,],[37,37,37,37,37,37,37,69,72,37,37,37,37,37,37,37,37,37,37,37,]),'DOUBLE':([18,25,26,29,34,35,40,53,54,55,56,58,59,60,61,62,63,79,],[38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,]),'UMINUS':([18,20,25,26,28,29,30,31,32,33,34,35,36,37,38,39,40,41,43,49,50,53,54,55,56,58,59,60,61,62,63,64,65,66,67,68,75,76,77,78,79,80,81,82,83,84,85,86,88,89,93,94,95,],[39,-4,39,39,64,39,-32,-33,-34,-35,39,39,-48,-49,-50,-51,39,-30,-28,64,64,39,39,39,39,39,39,39,39,39,39,-52,64,64,64,64,64,64,64,64,39,64,64,64,64,64,64,-31,-4,-4,64,-26,-27,]),'MINUS':([18,20,25,26,28,29,30,31,32,33,34,35,36,37,38,39,40,41,43,49,50,53,54,55,56,58,59,60,61,62,63,64,65,66,67,68,75,76,77,78,79,80,81,82,83,84,85,86,88,89,93,94,95,],[35,-4,35,35,61,35,-32,-33,-34,-35,35,35,-48,-49,-50,-51,35,-30,-28,61,61,35,35,35,35,35,35,35,35,35,35,-52,61,61,-53,61,61,61,61,61,35,61,61,-44,-45,-46,-47,-31,-4,-4,61,-26,-27,]),'EQ':([19,20,28,30,31,32,33,36,37,38,39,41,43,49,50,57,64,65,66,67,68,75,76,77,78,80,81,82,83,84,85,86,88,89,93,94,95,],[40,-4,57,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,57,57,79,-52,57,57,-53,57,57,57,-39,-40,-42,-43,-44,-45,-46,-47,-31,-4,-4,57,-26,-27,]),'S':([20,22,23,24,28,30,31,32,33,36,37,38,39,41,43,46,47,64,66,67,68,71,75,76,77,78,80,81,82,83,84,85,86,88,89,90,93,94,95,96,],[-4,44,-21,-4,52,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,-23,-24,-52,-36,-53,87,-22,-37,-38,-39,-40,-42,-43,-44,-45,-46,-47,-31,-4,-4,-4,-41,-26,-27,-25,]),'OR':([20,28,30,31,32,33,36,37,38,39,41,43,49,50,64,65,66,67,68,75,76,77,78,80,81,82,83,84,85,86,88,89,93,94,95,],[-4,53,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,53,53,-52,53,53,-53,53,53,53,-39,-40,-42,-43,-44,-45,-46,-47,-31,-4,-4,53,-26,-27,]),'AND':([20,28,30,31,32,33,36,37,38,39,41,43,49,50,64,65,66,67,68,75,76,77,78,80,81,82,83,84,85,86,88,89,93,94,95,],[-4,54,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,54,54,-52,54,54,-53,54,54,54,-39,-40,-42,-43,-44,-45,-46,-47,-31,-4,-4,54,-26,-27,]),'MIN':([20,28,30,31,32,33,36,37,38,39,41,43,49,50,64,65,66,67,68,75,76,77,78,80,81,82,83,84,85,86,88,89,93,94,95,],[-4,55,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,55,55,-52,55,55,-53,55,55,55,None,None,None,None,-44,-45,-46,-47,-31,-4,-4,55,-26,-27,]),'MAJ':([20,28,30,31,32,33,36,37,38,39,41,43,49,50,64,65,66,67,68,75,76,77,78,80,81,82,83,84,85,86,88,89,93,94,95,],[-4,56,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,56,56,-52,56,56,-53,56,56,56,None,None,None,None,-44,-45,-46,-47,-31,-4,-4,56,-26,-27,]),'MAJ_EQ':([20,28,30,31,32,33,36,37,38,39,41,43,49,50,64,65,66,67,68,75,76,77,78,80,81,82,83,84,85,86,88,89,93,94,95,],[-4,58,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,58,58,-52,58,58,-53,58,58,58,None,None,None,None,-44,-45,-46,-47,-31,-4,-4,58,-26,-27,]),'MIN_EQ':([20,28,30,31,32,33,36,37,38,39,41,43,49,50,64,65,66,67,68,75,76,77,78,80,81,82,83,84,85,86,88,89,93,94,95,],[-4,59,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,59,59,-52,59,59,-53,59,59,59,None,None,None,None,-44,-45,-46,-47,-31,-4,-4,59,-26,-27,]),'PLUS':([20,28,30,31,32,33,36,37,38,39,41,43,49,50,64,65,66,67,68,75,76,77,78,80,81,82,83,84,85,86,88,89,93,94,95,],[-4,60,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,60,60,-52,60,60,-53,60,60,60,60,60,60,60,-44,-45,-46,-47,-31,-4,-4,60,-26,-27,]),'STAR':([20,28,30,31,32,33,36,37,38,39,41,43,49,50,64,65,66,67,68,75,76,77,78,80,81,82,83,84,85,86,88,89,93,94,95,],[-4,62,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,62,62,-52,62,62,-53,62,62,62,62,62,62,62,62,62,-46,-47,-31,-4,-4,62,-26,-27,]),'DIV':([20,28,30,31,32,33,36,37,38,39,41,43,49,50,64,65,66,67,68,75,76,77,78,80,81,82,83,84,85,86,88,89,93,94,95,],[-4,63,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,63,63,-52,63,63,-53,63,63,63,63,63,63,63,63,63,-46,-47,-31,-4,-4,63,-26,-27,]),'RC':([20,30,31,32,33,36,37,38,39,41,43,49,50,64,65,66,67,75,76,77,78,80,81,82,83,84,85,86,88,89,93,94,95,],[-4,-32,-33,-34,-35,-48,-49,-50,-51,-30,-28,73,74,-52,86,-36,-53,-37,-38,-39,-40,-42,-43,-44,-45,-46,-47,-31,-4,-4,-41,-26,-27,]),'SC':([20,41,43,69,70,72,88,89,94,95,],[-4,-30,-28,88,89,90,-4,-4,-26,-27,]),'SO':([20,24,88,89,90,],[42,48,42,42,48,]),'CM':([22,23,24,46,47,71,90,96,],[45,-21,-4,-23,-24,-22,-4,-25,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'prog':([0,],[1,]),'decl_list':([0,],[2,]),'empty':([0,17,21,82,83,84,],[3,37,41,37,37,41,]),'stmt_list':([2,13,],[4,33,]),'decl':([2,],[5,]),'stmt':([2,4,9,13,33,67,68,],[6,18,23,6,18,85,86,]),'type':([2,],[7,]),'assignment':([2,4,9,13,33,67,68,],[11,11,11,11,11,11,11,]),'id':([2,4,9,12,13,22,24,26,29,33,34,36,46,47,49,50,51,52,53,54,55,56,67,68,71,],[16,16,16,30,16,30,30,30,30,16,30,64,30,30,30,30,30,30,30,30,30,30,16,16,30,]),'var_list':([7,],[19,]),'var':([7,39,],[20,65,]),'exp':([12,22,24,26,29,34,46,47,49,50,51,52,53,54,55,56,71,],[25,43,44,59,60,62,69,70,72,73,74,75,76,77,78,79,87,]),'id_array':([17,82,83,],[35,88,89,]),'array':([21,84,],[40,90,]),}
+_lr_goto_items = {'prog':([0,],[1,]),'decl_list':([0,],[2,]),'empty':([0,20,24,88,89,90,],[3,43,47,43,43,47,]),'stmt_list':([2,17,],[4,27,]),'decl':([2,],[5,]),'stmt':([2,4,17,27,73,74,97,],[6,21,6,21,91,92,98,]),'type':([2,],[7,]),'if_stmt':([2,4,17,27,73,74,97,],[8,8,8,8,8,8,8,]),'while_stmt':([2,4,17,27,73,74,97,],[9,9,9,9,9,9,9,]),'block_stmt':([2,4,17,27,73,74,97,],[10,10,10,10,10,10,10,]),'print_stmt':([2,4,17,27,73,74,97,],[11,11,11,11,11,11,11,]),'assignment':([2,4,17,27,73,74,97,],[12,12,12,12,12,12,12,]),'id':([2,4,17,18,25,26,27,29,34,35,40,42,53,54,55,56,58,59,60,61,62,63,73,74,79,97,],[19,19,19,36,36,36,19,36,36,36,36,70,36,36,36,36,36,36,36,36,36,36,19,19,36,19,]),'var_list':([7,],[22,]),'var':([7,45,],[23,71,]),'exp':([18,25,26,29,34,35,40,53,54,55,56,58,59,60,61,62,63,79,],[28,49,50,65,66,67,68,75,76,77,78,80,81,82,83,84,85,93,]),'condition':([18,25,26,29,34,35,40,53,54,55,56,58,59,60,61,62,63,79,],[30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,]),'arigmethic':([18,25,26,29,34,35,40,53,54,55,56,58,59,60,61,62,63,79,],[31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,]),'number_id':([18,25,26,29,34,35,40,53,54,55,56,58,59,60,61,62,63,79,],[32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,]),'unumber_id':([18,25,26,29,34,35,40,53,54,55,56,58,59,60,61,62,63,79,],[33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,]),'id_array':([20,88,89,],[41,94,95,]),'array':([24,90,],[46,96,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,50 +27,57 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> prog","S'",1,None,None,None),
-  ('prog -> decl_list stmt_list','prog',2,'p_prog','Lexical-Asignacion.py',171),
-  ('decl_list -> empty','decl_list',1,'p_decl_list','Lexical-Asignacion.py',175),
-  ('decl_list -> decl_list decl','decl_list',2,'p_decl_list','Lexical-Asignacion.py',176),
-  ('empty -> <empty>','empty',0,'p_empty','Lexical-Asignacion.py',181),
-  ('decl -> type var_list S','decl',3,'p_decl','Lexical-Asignacion.py',185),
-  ('stmt_list -> stmt_list stmt','stmt_list',2,'p_stmt_list','Lexical-Asignacion.py',190),
-  ('stmt_list -> stmt','stmt_list',1,'p_stmt_list','Lexical-Asignacion.py',191),
-  ('stmt -> IF RO exp RC stmt','stmt',5,'p_stmt','Lexical-Asignacion.py',196),
-  ('stmt -> ELSE stmt','stmt',2,'p_stmt','Lexical-Asignacion.py',197),
-  ('stmt -> WHILE RO exp RC stmt','stmt',5,'p_stmt','Lexical-Asignacion.py',198),
-  ('stmt -> assignment','stmt',1,'p_stmt','Lexical-Asignacion.py',199),
-  ('stmt -> PRINT exp S','stmt',3,'p_stmt','Lexical-Asignacion.py',200),
-  ('stmt -> BO stmt_list BC','stmt',3,'p_stmt','Lexical-Asignacion.py',201),
-  ('assignment -> id EQ exp S','assignment',4,'p_assignment','Lexical-Asignacion.py',206),
-  ('type -> INT_TYPE','type',1,'p_type','Lexical-Asignacion.py',222),
-  ('type -> DOUBLE_TYPE','type',1,'p_type','Lexical-Asignacion.py',223),
-  ('var_list -> var','var_list',1,'p_var_list','Lexical-Asignacion.py',228),
-  ('var_list -> var_list CM var','var_list',3,'p_var_list','Lexical-Asignacion.py',229),
-  ('var -> ID array','var',2,'p_var','Lexical-Asignacion.py',238),
-  ('array -> empty','array',1,'p_array','Lexical-Asignacion.py',246),
-  ('array -> SO INT SC array','array',4,'p_array','Lexical-Asignacion.py',247),
-  ('id_array -> SO INT SC id_array','id_array',4,'p_id_array','Lexical-Asignacion.py',261),
-  ('id_array -> SO id SC id_array','id_array',4,'p_id_array','Lexical-Asignacion.py',262),
-  ('id_array -> empty','id_array',1,'p_id_array','Lexical-Asignacion.py',263),
-  ('id -> ID','id',1,'p_id','Lexical-Asignacion.py',277),
-  ('id -> ID id_array','id',2,'p_id','Lexical-Asignacion.py',278),
-  ('exp -> exp AND exp','exp',3,'p_exp','Lexical-Asignacion.py',291),
-  ('exp -> exp OR exp','exp',3,'p_exp','Lexical-Asignacion.py',292),
-  ('exp -> NOT exp','exp',2,'p_exp','Lexical-Asignacion.py',293),
-  ('exp -> exp EQ EQ exp','exp',4,'p_exp','Lexical-Asignacion.py',294),
-  ('exp -> exp MIN exp','exp',3,'p_exp','Lexical-Asignacion.py',295),
-  ('exp -> exp MAJ exp','exp',3,'p_exp','Lexical-Asignacion.py',296),
-  ('exp -> exp MAJ_EQ exp','exp',3,'p_exp','Lexical-Asignacion.py',297),
-  ('exp -> exp MIN_EQ exp','exp',3,'p_exp','Lexical-Asignacion.py',298),
-  ('exp -> exp PLUS exp','exp',3,'p_exp','Lexical-Asignacion.py',299),
-  ('exp -> exp MINUS exp','exp',3,'p_exp','Lexical-Asignacion.py',300),
-  ('exp -> exp STAR exp','exp',3,'p_exp','Lexical-Asignacion.py',301),
-  ('exp -> exp DIV exp','exp',3,'p_exp','Lexical-Asignacion.py',302),
-  ('exp -> exp UMINUS','exp',2,'p_exp','Lexical-Asignacion.py',303),
-  ('exp -> exp MINUS_ID','exp',2,'p_exp','Lexical-Asignacion.py',304),
-  ('exp -> RO exp RC','exp',3,'p_exp','Lexical-Asignacion.py',305),
-  ('exp -> id','exp',1,'p_exp','Lexical-Asignacion.py',306),
-  ('exp -> INT','exp',1,'p_exp','Lexical-Asignacion.py',307),
-  ('exp -> DOUBLE','exp',1,'p_exp','Lexical-Asignacion.py',308),
-  ('exp -> UMINUS','exp',1,'p_exp','Lexical-Asignacion.py',309),
-  ('exp -> MINUS_ID','exp',1,'p_exp','Lexical-Asignacion.py',310),
+  ('prog -> decl_list stmt_list','prog',2,'p_prog','Lexical-Asignacion.py',190),
+  ('decl_list -> empty','decl_list',1,'p_decl_list','Lexical-Asignacion.py',196),
+  ('decl_list -> decl_list decl','decl_list',2,'p_decl_list','Lexical-Asignacion.py',197),
+  ('empty -> <empty>','empty',0,'p_empty','Lexical-Asignacion.py',202),
+  ('decl -> type var_list S','decl',3,'p_decl','Lexical-Asignacion.py',206),
+  ('stmt_list -> stmt_list stmt','stmt_list',2,'p_stmt_list','Lexical-Asignacion.py',215),
+  ('stmt_list -> stmt','stmt_list',1,'p_stmt_list','Lexical-Asignacion.py',216),
+  ('stmt -> if_stmt','stmt',1,'p_stmt','Lexical-Asignacion.py',225),
+  ('stmt -> while_stmt','stmt',1,'p_stmt','Lexical-Asignacion.py',226),
+  ('stmt -> block_stmt','stmt',1,'p_stmt','Lexical-Asignacion.py',227),
+  ('stmt -> print_stmt','stmt',1,'p_stmt','Lexical-Asignacion.py',228),
+  ('stmt -> assignment','stmt',1,'p_stmt','Lexical-Asignacion.py',229),
+  ('if_stmt -> IF RO exp RC stmt','if_stmt',5,'p_if_stmt','Lexical-Asignacion.py',235),
+  ('if_stmt -> IF RO exp RC stmt ELSE stmt','if_stmt',7,'p_if_stmt','Lexical-Asignacion.py',236),
+  ('while_stmt -> WHILE RO exp RC stmt','while_stmt',5,'p_while_stmt','Lexical-Asignacion.py',241),
+  ('print_stmt -> PRINT exp S','print_stmt',3,'p_print_stmt','Lexical-Asignacion.py',252),
+  ('block_stmt -> BO stmt_list BC','block_stmt',3,'p_block_stmt','Lexical-Asignacion.py',257),
+  ('assignment -> id EQ exp S','assignment',4,'p_assignment','Lexical-Asignacion.py',263),
+  ('type -> INT_TYPE','type',1,'p_type','Lexical-Asignacion.py',281),
+  ('type -> DOUBLE_TYPE','type',1,'p_type','Lexical-Asignacion.py',282),
+  ('var_list -> var','var_list',1,'p_var_list','Lexical-Asignacion.py',291),
+  ('var_list -> var_list CM var','var_list',3,'p_var_list','Lexical-Asignacion.py',292),
+  ('var -> ID array','var',2,'p_var','Lexical-Asignacion.py',301),
+  ('array -> empty','array',1,'p_array','Lexical-Asignacion.py',309),
+  ('array -> SO INT SC array','array',4,'p_array','Lexical-Asignacion.py',310),
+  ('id_array -> SO INT SC id_array','id_array',4,'p_id_array','Lexical-Asignacion.py',324),
+  ('id_array -> SO id SC id_array','id_array',4,'p_id_array','Lexical-Asignacion.py',325),
+  ('id_array -> empty','id_array',1,'p_id_array','Lexical-Asignacion.py',326),
+  ('id -> ID','id',1,'p_id','Lexical-Asignacion.py',340),
+  ('id -> ID id_array','id',2,'p_id','Lexical-Asignacion.py',341),
+  ('exp -> RO exp RC','exp',3,'p_exp','Lexical-Asignacion.py',350),
+  ('exp -> condition','exp',1,'p_exp','Lexical-Asignacion.py',351),
+  ('exp -> arigmethic','exp',1,'p_exp','Lexical-Asignacion.py',352),
+  ('exp -> number_id','exp',1,'p_exp','Lexical-Asignacion.py',353),
+  ('exp -> unumber_id','exp',1,'p_exp','Lexical-Asignacion.py',354),
+  ('condition -> NOT exp','condition',2,'p_condition','Lexical-Asignacion.py',363),
+  ('condition -> exp OR exp','condition',3,'p_condition','Lexical-Asignacion.py',364),
+  ('condition -> exp AND exp','condition',3,'p_condition','Lexical-Asignacion.py',365),
+  ('condition -> exp MIN exp','condition',3,'p_condition','Lexical-Asignacion.py',366),
+  ('condition -> exp MAJ exp','condition',3,'p_condition','Lexical-Asignacion.py',367),
+  ('condition -> exp EQ EQ exp','condition',4,'p_condition','Lexical-Asignacion.py',368),
+  ('condition -> exp MAJ_EQ exp','condition',3,'p_condition','Lexical-Asignacion.py',369),
+  ('condition -> exp MIN_EQ exp','condition',3,'p_condition','Lexical-Asignacion.py',370),
+  ('arigmethic -> exp PLUS exp','arigmethic',3,'p_arigmethic','Lexical-Asignacion.py',381),
+  ('arigmethic -> exp MINUS exp','arigmethic',3,'p_arigmethic','Lexical-Asignacion.py',382),
+  ('arigmethic -> exp STAR exp','arigmethic',3,'p_arigmethic','Lexical-Asignacion.py',383),
+  ('arigmethic -> exp DIV exp','arigmethic',3,'p_arigmethic','Lexical-Asignacion.py',384),
+  ('number_id -> id','number_id',1,'p_number_id','Lexical-Asignacion.py',390),
+  ('number_id -> INT','number_id',1,'p_number_id','Lexical-Asignacion.py',391),
+  ('number_id -> DOUBLE','number_id',1,'p_number_id','Lexical-Asignacion.py',392),
+  ('unumber_id -> UMINUS','unumber_id',1,'p_unumber_id','Lexical-Asignacion.py',401),
+  ('unumber_id -> exp UMINUS','unumber_id',2,'p_unumber_id','Lexical-Asignacion.py',402),
+  ('unumber_id -> MINUS exp','unumber_id',2,'p_unumber_id','Lexical-Asignacion.py',403),
 ]
