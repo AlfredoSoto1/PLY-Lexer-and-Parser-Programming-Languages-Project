@@ -162,6 +162,7 @@ print('--------------Parser stage----------------')
 # --- Parser machine implementation ---
 
 label_count = 0
+start_label_count = 0
 assembly_code = []
 
 precedence = (
@@ -248,8 +249,14 @@ def p_else_stmt(p):
 def p_while_stmt(p):
     '''while_stmt : WHILE RO exp RC stmt
     '''
-    global label_count
-    p[0] = f'L{label_count}: EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\n    GOTO L{label_count}\nL{label_count + 1}:'
+    global label_count, start_label_count
+    start_label_count = label_count
+    statement = p[5]
+
+    if f'GOTO L' in statement or f'GOTOF L' in statement:
+        statement = statement.replace(f'L{start_label_count}', f'L{start_label_count + 1}')
+
+    p[0] = f'L{label_count}: EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{statement}\n    GOTO L{label_count}\nL{label_count + 1}:'
     label_count += 2
     pass
 
