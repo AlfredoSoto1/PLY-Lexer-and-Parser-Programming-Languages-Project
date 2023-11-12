@@ -14,42 +14,12 @@ int i, j;
 double swap;
 int pos;
 
-// vector initialization
-x[0] = -2.0;
-x[1] = -3.0;
-x[2] = 3.0;
-x[3] = 5.0;
-x[4] = 2.5;
-
-// Bubble sort
-pos = 5;
 while (pos > 0) {
-  i = 0;
-  while (i < pos - 1){
-    j = i + 1;
-    if (x[i] > x[j]){
-      swap = x[j];
-      x[j] = x[i];
-      x[i] = swap;
+    while (pos > 0) {
+        print(3);
     }
-    i = i + 1;
-  }
-  pos = pos-1;
-
 }
 
-// if ( pos > 0) {
-//   x[0] = 3.4;
-// } else {
-//   x[0] = 3.7;
-// }
-
-// Print Results
-i = 0;
-while(i<5){
-  print x[i];
-  i = i + 1;
- }
 """
 
 # --- Lexer machine parameters implementation ---
@@ -121,6 +91,12 @@ t_STAR = r'\*'
 t_DIV = r'/'
 t_CM = r','
 t_S = r';'
+# 'PRINT',
+#     'while' : 'WHILE',
+#     'if'    : 'IF',
+#     'else'  : 'ELSE',
+#     'int'   : 'INT_TYPE',
+#     'double': 'DOUBLE_TYPE',
 
 def t_COMMENT(t):
     r'//.*\n' # Ignore comments
@@ -188,12 +164,6 @@ print('--------------Parser stage----------------')
 label_count = 0
 assembly_code = []
 
-def generate_array_index_code(index_array):
-    array_indices = ""
-    for var in index_array[1:]:
-        array_indices += "[" + str(var) + "]"
-    return array_indices
-
 precedence = (
     ('nonassoc', 'MIN', 'MAJ', 'MIN_EQ', 'MAJ_EQ'),  # Nonassociative operators
     ('left', 'PLUS', 'MINUS'),
@@ -204,14 +174,20 @@ precedence = (
 
 def p_prog(p):
     '''prog : decl_list stmt_list'''
-    for instructions in p[2]:
-        print(instructions)
+    assembly_code.append(p[1])
+    assembly_code.append(p[2] + ' END')
     pass
 
 def p_decl_list(p):
     '''decl_list : empty
-        | decl_list decl
+        | decl decl_list
     '''
+    if p[1] == None:
+        p[0] = None
+    elif p[2] == None:
+        p[0] = f'{p[1]}'
+    else:
+        p[0] = f'{p[1]}\n{p[2]}'
     pass
 
 def p_empty(p):
@@ -220,21 +196,22 @@ def p_empty(p):
 
 def p_decl(p):
     '''decl : type var_list S'''
-    # for variable in p[2]:
-    #     if isinstance(variable, list):
-    #         assembly_code.append(f'{p[1]} {variable[0]}{generate_array_index_code(variable)}')
-    #     else:
-    #         assembly_code.append(f'{p[1]} {variable}')
+    decl_instructions = ''
+    for variable in p[2]:
+        decl_instructions += p[1] + ' ' +  variable + '\n'
+    decl_instructions = decl_instructions.rstrip('\n')
+
+    p[0] = decl_instructions
     pass
 
 def p_stmt_list(p):
-    '''stmt_list : stmt_list stmt
+    '''stmt_list : stmt stmt_list
         | stmt
     '''
     if len(p) == 2:
-        p[0] = [p[1]]
+        p[0] = p[1]
     else:
-        p[0] = p[1] + [p[2]]
+        p[0] = p[1] + '\n' + p[2]
     pass
 
 def p_stmt(p):
@@ -248,43 +225,38 @@ def p_stmt(p):
     pass
 
 def p_if_stmt(p):
-    '''if_stmt : IF RO exp RC stmt
-               | IF RO exp RC stmt ELSE stmt
+    '''if_stmt : IF RO exp RC stmt else_stmt
     '''
-    if_statement_list = ''
-    if len(p) == 6:
-        if isinstance(p[5], list):
-            for statement in p[5]:
-                if_statement_list += str(statement) + '\n'
-            if_statement_list = if_statement_list.rstrip("\n") # remove last new line
-        else:
-            if_statement_list = p[5]
-
     global label_count
-    p[0] = f'EVAL {p[3]} \nGOTOF L{label_count + 1} \n{if_statement_list} \nL{label_count + 1}:'
+    if p[6] == None:
+        p[0] = f'    EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\nL{label_count + 1}:'
+    else:
+        p[0] = f'    EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\n    GOTO L{label_count + 2}\nL{label_count + 1}:\n{p[6]}\nL{label_count + 2}:'
     label_count += 2
+    pass
+
+def p_else_stmt(p):
+    '''else_stmt : ELSE stmt
+            | empty
+    '''
+    if p[1] == None:
+        p[0] = None
+    else:
+        p[0] = p[2]
     pass
 
 def p_while_stmt(p):
     '''while_stmt : WHILE RO exp RC stmt
     '''
-    while_statement_list = ''
-    if isinstance(p[5], list):
-        for statement in p[5]:
-            while_statement_list += str(statement) + '\n'
-        while_statement_list = while_statement_list.rstrip("\n") # remove last new line
-    else:
-        while_statement_list = p[5]
-
     global label_count
-    p[0] = f'L{label_count}: EVAL {p[3]} \nGOTOF L{label_count + 1} \n{while_statement_list} \nGOTO L{label_count} \nL{label_count + 1}:'
+    p[0] = f'L{label_count}: EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\n    GOTO L{label_count}\nL{label_count + 1}:'
     label_count += 2
     pass
 
 def p_print_stmt(p):
     '''print_stmt : PRINT exp S
     '''
-    p[0] = f'PRINT {p[2]}'
+    p[0] = f'    PRINT {p[2]}'
     pass
 
 def p_block_stmt(p):
@@ -295,17 +267,7 @@ def p_block_stmt(p):
 
 def p_assignment(p):
     '''assignment : id EQ exp S'''
-
-    ass_instruction = ''
-    id_index_array =  p[1]
-    if isinstance(id_index_array, list):
-        # If it's an array access
-        ass_instruction = f'{id_index_array[0]}{generate_array_index_code(id_index_array)}'
-    else:
-        # If it's a simple identifier
-        ass_instruction = f'{id_index_array}'
-
-    p[0] = f'EVAL {p[3]} \nASS {ass_instruction}'
+    p[0] = f'    EVAL {p[3]}\n    ASS  {p[1]}'
     pass
 
 def p_type(p):
@@ -320,12 +282,12 @@ def p_type(p):
 
 def p_var_list(p):
     '''var_list : var
-        | var_list CM var
+        | var CM var_list
     '''
     if len(p) == 2:
         p[0] = [p[1]]
     else:
-        p[0] = p[1] + [p[3]]
+        p[0] = [p[1]] + p[3]
     pass
 
 def p_var(p):
@@ -333,22 +295,22 @@ def p_var(p):
     if p[2] is None:
         p[0] = p[1]
     else:
-        p[0] = [p[1]] + p[2]
+        p[0] = f'{p[1]}{p[2]}'
     pass
 
 def p_array(p):
     '''array : empty
         | SO INT SC array
     '''
-    if len(p) == 5:
-        # Non-empty id_array
-        if p[4] is None:
-            p[0] = [p[2]]
-        else:
-            p[0] = [p[2]] + p[4]
-    else:
+    if p[1] == None:
         # Empty id_array
         p[0] = None
+    else:
+        # Non-empty id_array
+        if p[4] is None:
+            p[0] = f'[{p[2]}]'
+        else:
+            p[0] = f'[{p[2]}]{p[4]}' # [1][2][n]...
     pass
 
 def p_id_array(p):
@@ -438,8 +400,8 @@ def p_unumber_id(p):
         p[0] = f'{p[1]} {p[2]} +'
     pass
 
-def p_error(p):
-    print(f"Syntax error at line {p.lineno}, position {p.lexpos}, token {p.type}")
+# def p_error(p):
+#     print(f"Syntax error at line {p.lineno}, position {p.lexpos}, token {p.type}")
     # print("Syntax error somewhere")
 
 # Build the parser
@@ -449,7 +411,7 @@ parser = ply_parser.yacc()
 result = parser.parse(source_code)
 
 # Print the parse tree
-print(result)
+# print(result)
 
 # print the generated assembly code
 print('--------------Pseudo-assembly code----------------')
