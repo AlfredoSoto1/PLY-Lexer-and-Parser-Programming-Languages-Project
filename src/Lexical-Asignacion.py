@@ -520,3 +520,14 @@ result = parser.parse(source_code)
 print('--------------Pseudo-assembly code----------------')
 for code in assembly_code:
     print(code)
+
+output_path = 'src/output_instructions.txt'
+
+# Open the file in write mode ('w')
+with open(output_path, 'w') as file:
+    # Write each instruction to the file
+    for instruction in assembly_code:
+        file.write(instruction + '\n')
+
+# Print a message indicating that the file has been saved
+print(f"Instructions have been saved to '{output_path}'.")
