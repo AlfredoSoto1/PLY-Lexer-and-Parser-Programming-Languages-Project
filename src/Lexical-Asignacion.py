@@ -8,26 +8,50 @@ with open('src/Test_program.txt', 'r') as source_file:
     source_code = source_file.read() 
 
 
-# source_code = """
-# double x[5];
-# int i, j;
-# double swap;
-# int pos;
+source_code = """
+double x[5];
+int i, j;
+double swap;
+int pos;
 
-# while (pos > 0) {
-#     while (pos > 0) {
-#         print(3);
-#     }
-#     while (pos > 0) {
-#         print(3);
-#     }
-# }
+// vector initialization
+x[0] = -2.0;
+x[1] = -3.0;
+x[2] = 3.0;
+x[3] = 5.0;
+x[4] = 2.5;
 
-# while (pos > 0) {
-#     print(3);
-# }
+// Bubble sort
+pos = 5;
+while (pos > 0) {
+  i = 0;
+  while (i < pos - 1){
+    j = i + 1;
+    if (x[i] > x[j]){
+      swap = x[j];
+      x[j] = x[i];
+      x[i] = swap;
+    }
+    i = i + 1;
+  }
+  pos = pos-1;
 
-# """
+}
+
+if ( pos > 0) {
+  x[0] = 3.4;
+} 
+ else {
+   x[0] = 3.7;
+ }
+
+// Print Results
+i = 0;
+while(i<5){
+  print x[i];
+  i = i + 1;
+ }
+"""
 
 # --- Lexer machine parameters implementation ---
 
@@ -181,21 +205,20 @@ def extract_labels(instruction):
     return re.findall(pattern, instruction)
 
 def replace_labels_with_numbers(instructions):
+    label_counter = 1  # Counter for incrementing label numbers
     label_mapping = {}  # Dictionary to store the mapping between labels and numbers
     new_instructions = []  # List to store instructions with replaced labels
 
     for instruction in instructions:
-        labels = extract_labels(instruction)
-
-        for label in labels:
+        for label in extract_labels(instruction):
             if label not in label_mapping:
                 # If the label is not in the mapping, add it with an incrementing number
-                label_mapping[label] = len(label_mapping) + 1
-
+                label_mapping[label] = f'L{label_counter}'
+                label_counter += 1
     # Replace labels in the original instructions with incrementing numbers
     for instruction in instructions:
-        for label, number in label_mapping.items():
-            instruction = instruction.replace(label, f'L{number}')
+        for label, new_label in label_mapping.items():
+            instruction = re.sub(r'\b' + re.escape(label) + r'\b', new_label, instruction)
         new_instructions.append(instruction)
     return new_instructions
 
@@ -214,12 +237,8 @@ def p_prog(p):
         assembly_code.append(instruction)
 
     for instruction in replace_labels_with_numbers(p[2]):
-    # for instruction in p[2]:
         assembly_code.append(instruction)
-
     assembly_code[-1] += ' END'
-
-    # assembly_code.append(p[2] + ' END')
     pass
 
 def p_decl_list(p):
@@ -232,12 +251,6 @@ def p_decl_list(p):
         p[0] = p[1]
     else:
         p[0] = p[1] + p[2]
-    # if p[1] == None:
-    #     p[0] = None
-    # elif p[2] == None:
-    #     p[0] = f'{p[1]}'
-    # else:
-    #     p[0] = f'{p[1]}\n{p[2]}'
     pass
 
 def p_empty(p):
@@ -247,9 +260,6 @@ def p_empty(p):
 def p_decl(p):
     '''decl : type var_list S'''
     decl_instructions = []
-    # for variable in p[2]:
-    #     decl_instructions += p[1] + ' ' +  variable + '\n'
-    # decl_instructions = decl_instructions.rstrip('\n')
 
     for variable in p[2]:
         decl_instructions += [p[1] + ' ' +  variable]
@@ -265,11 +275,6 @@ def p_stmt_list(p):
         p[0] = p[1]
     else:
         p[0] = p[1] + p[2]
-
-    # if len(p) == 2:
-    #     p[0] = p[1]
-    # else:
-    #     p[0] = p[1] + '\n' + p[2]
     pass
 
 def p_stmt(p):
@@ -302,6 +307,7 @@ def p_if_stmt(p):
         if_jump_instruction = [
             f'LABEL{label_count + 1}:'
         ]
+        label_count += 2
     else:
         if_jump_instruction = [
             f'    GOTO LABEL{label_count + 2}',
@@ -313,16 +319,9 @@ def p_if_stmt(p):
         else_jump_instruction = [
             f'LABEL{label_count + 2}:'
         ]
+        label_count += 3
 
     p[0] = if_instruction + statement + if_jump_instruction + else_instruction + else_jump_instruction
-    label_count += 2
-
-    # global label_count
-    # if p[6] == None:
-    #     p[0] = f'    EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\nL{label_count + 1}:'
-    # else:
-    #     p[0] = f'    EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\n    GOTO L{label_count + 2}\nL{label_count + 1}:\n{p[6]}\nL{label_count + 2}:'
-    # label_count += 2
     pass
 
 def p_else_stmt(p):
@@ -355,9 +354,6 @@ def p_while_stmt(p):
     label_count += 2
     
     p[0] = while_instruction + statement + jump_instruction
-    # global label_count
-    # p[0] = f'L{label_count}: EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\n    GOTO L{label_count}\nL{label_count + 1}:'
-    # label_count += 2
     pass
 
 def p_print_stmt(p):
@@ -507,8 +503,8 @@ def p_unumber_id(p):
         p[0] = f'{p[1]} {p[2]} +'
     pass
 
-# def p_error(p):
-#     print(f"Syntax error at line {p.lineno}, position {p.lexpos}, token {p.type}")
+def p_error(p):
+    print(f"Syntax error at line {p.lineno}, position {p.lexpos}, token {p.type}")
     # print("Syntax error somewhere")
 
 # Build the parser
