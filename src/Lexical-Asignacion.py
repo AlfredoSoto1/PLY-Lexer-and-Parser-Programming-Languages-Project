@@ -8,19 +8,26 @@ with open('src/Test_program.txt', 'r') as source_file:
     source_code = source_file.read() 
 
 
-source_code = """
-double x[5];
-int i, j;
-double swap;
-int pos;
+# source_code = """
+# double x[5];
+# int i, j;
+# double swap;
+# int pos;
 
-while (pos > 0) {
-    while (pos > 0) {
-        print(3);
-    }
-}
+# while (pos > 0) {
+#     while (pos > 0) {
+#         print(3);
+#     }
+#     while (pos > 0) {
+#         print(3);
+#     }
+# }
 
-"""
+# while (pos > 0) {
+#     print(3);
+# }
+
+# """
 
 # --- Lexer machine parameters implementation ---
 
@@ -165,6 +172,33 @@ label_count = 0
 start_label_count = 0
 assembly_code = []
 
+import re
+
+def extract_labels(instruction):
+    # Define a regular expression pattern to match the label format (e.g., L0, L1)
+    pattern = r'(LABEL\d+)'
+    # Use re.findall() to find all occurrences of the pattern in the instruction
+    return re.findall(pattern, instruction)
+
+def replace_labels_with_numbers(instructions):
+    label_mapping = {}  # Dictionary to store the mapping between labels and numbers
+    new_instructions = []  # List to store instructions with replaced labels
+
+    for instruction in instructions:
+        labels = extract_labels(instruction)
+
+        for label in labels:
+            if label not in label_mapping:
+                # If the label is not in the mapping, add it with an incrementing number
+                label_mapping[label] = len(label_mapping) + 1
+
+    # Replace labels in the original instructions with incrementing numbers
+    for instruction in instructions:
+        for label, number in label_mapping.items():
+            instruction = instruction.replace(label, f'L{number}')
+        new_instructions.append(instruction)
+    return new_instructions
+
 precedence = (
     ('nonassoc', 'MIN', 'MAJ', 'MIN_EQ', 'MAJ_EQ'),  # Nonassociative operators
     ('left', 'PLUS', 'MINUS'),
@@ -175,20 +209,35 @@ precedence = (
 
 def p_prog(p):
     '''prog : decl_list stmt_list'''
-    assembly_code.append(p[1])
-    assembly_code.append(p[2] + ' END')
+    
+    for instruction in p[1]:
+        assembly_code.append(instruction)
+
+    for instruction in replace_labels_with_numbers(p[2]):
+    # for instruction in p[2]:
+        assembly_code.append(instruction)
+
+    assembly_code[-1] += ' END'
+
+    # assembly_code.append(p[2] + ' END')
     pass
 
 def p_decl_list(p):
     '''decl_list : empty
         | decl decl_list
     '''
-    if p[1] == None:
+    if p[1] is None:
         p[0] = None
-    elif p[2] == None:
-        p[0] = f'{p[1]}'
+    elif p[2] is None:
+        p[0] = p[1]
     else:
-        p[0] = f'{p[1]}\n{p[2]}'
+        p[0] = p[1] + p[2]
+    # if p[1] == None:
+    #     p[0] = None
+    # elif p[2] == None:
+    #     p[0] = f'{p[1]}'
+    # else:
+    #     p[0] = f'{p[1]}\n{p[2]}'
     pass
 
 def p_empty(p):
@@ -197,10 +246,13 @@ def p_empty(p):
 
 def p_decl(p):
     '''decl : type var_list S'''
-    decl_instructions = ''
+    decl_instructions = []
+    # for variable in p[2]:
+    #     decl_instructions += p[1] + ' ' +  variable + '\n'
+    # decl_instructions = decl_instructions.rstrip('\n')
+
     for variable in p[2]:
-        decl_instructions += p[1] + ' ' +  variable + '\n'
-    decl_instructions = decl_instructions.rstrip('\n')
+        decl_instructions += [p[1] + ' ' +  variable]
 
     p[0] = decl_instructions
     pass
@@ -212,7 +264,12 @@ def p_stmt_list(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = p[1] + '\n' + p[2]
+        p[0] = p[1] + p[2]
+
+    # if len(p) == 2:
+    #     p[0] = p[1]
+    # else:
+    #     p[0] = p[1] + '\n' + p[2]
     pass
 
 def p_stmt(p):
@@ -222,6 +279,7 @@ def p_stmt(p):
             | print_stmt
             | assignment
     '''
+    # pass statements as array of instructions
     p[0] = p[1] # pass the statement up
     pass
 
@@ -229,11 +287,42 @@ def p_if_stmt(p):
     '''if_stmt : IF RO exp RC stmt else_stmt
     '''
     global label_count
-    if p[6] == None:
-        p[0] = f'    EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\nL{label_count + 1}:'
+
+    if_instruction = [
+        f'    EVAL {p[3]}',
+        f'    GOTOF LABEL{label_count + 1}'
+    ]
+
+    statement = p[5]
+    if_jump_instruction   = []
+    else_instruction      = []
+    else_jump_instruction = []
+
+    if p[6] is None:
+        if_jump_instruction = [
+            f'LABEL{label_count + 1}:'
+        ]
     else:
-        p[0] = f'    EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\n    GOTO L{label_count + 2}\nL{label_count + 1}:\n{p[6]}\nL{label_count + 2}:'
+        if_jump_instruction = [
+            f'    GOTO LABEL{label_count + 2}',
+            f'LABEL{label_count + 1}:'
+        ]
+
+        else_instruction = p[6]
+
+        else_jump_instruction = [
+            f'LABEL{label_count + 2}:'
+        ]
+
+    p[0] = if_instruction + statement + if_jump_instruction + else_instruction + else_jump_instruction
     label_count += 2
+
+    # global label_count
+    # if p[6] == None:
+    #     p[0] = f'    EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\nL{label_count + 1}:'
+    # else:
+    #     p[0] = f'    EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\n    GOTO L{label_count + 2}\nL{label_count + 1}:\n{p[6]}\nL{label_count + 2}:'
+    # label_count += 2
     pass
 
 def p_else_stmt(p):
@@ -249,21 +338,32 @@ def p_else_stmt(p):
 def p_while_stmt(p):
     '''while_stmt : WHILE RO exp RC stmt
     '''
-    global label_count, start_label_count
-    start_label_count = label_count
-    statement = p[5]
+    global label_count
 
-    if f'GOTO L' in statement or f'GOTOF L' in statement:
-        statement = statement.replace(f'L{start_label_count}', f'L{start_label_count + 1}')
+    while_instruction = [
+        f'LABEL{label_count}: EVAL {p[3]}',
+        f'    GOTOF LABEL{label_count + 1}',
+    ]
 
-    p[0] = f'L{label_count}: EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{statement}\n    GOTO L{label_count}\nL{label_count + 1}:'
+    statement = p[5] # list of instructions
+    
+    jump_instruction = [
+        f'    GOTO LABEL{label_count}',
+        f'LABEL{label_count + 1}:'
+    ]
+
     label_count += 2
+    
+    p[0] = while_instruction + statement + jump_instruction
+    # global label_count
+    # p[0] = f'L{label_count}: EVAL {p[3]}\n    GOTOF L{label_count + 1}\n{p[5]}\n    GOTO L{label_count}\nL{label_count + 1}:'
+    # label_count += 2
     pass
 
 def p_print_stmt(p):
     '''print_stmt : PRINT exp S
     '''
-    p[0] = f'    PRINT {p[2]}'
+    p[0] = [f'    PRINT {p[2]}']
     pass
 
 def p_block_stmt(p):
@@ -274,7 +374,7 @@ def p_block_stmt(p):
 
 def p_assignment(p):
     '''assignment : id EQ exp S'''
-    p[0] = f'    EVAL {p[3]}\n    ASS  {p[1]}'
+    p[0] = [f'    EVAL {p[3]}\n    ASS  {p[1]}']
     pass
 
 def p_type(p):
