@@ -15,7 +15,7 @@ with open('src/Test_program.txt', 'r') as source_file:
 # int pos;
 
 # // vector initialization
-# x[0] = -2.0;
+# xa[0] = -2.0;
 # x[1] = -3.0;
 # x[2] = 3.0;
 # x[3] = 5.0;
@@ -25,32 +25,9 @@ with open('src/Test_program.txt', 'r') as source_file:
 # pos = 5;
 # while (pos > 0) {
 #   i = 0;
-#   while (i < pos - 1){
-#     j = i + 1;
-#     if (x[i] > x[j]){
-#       swap = x[j];
-#       x[j] = x[i];
-#       x[i] = swap;
-#     }
-#     i = i + 1;
-#   }
 #   pos = pos-1;
-
 # }
 
-# if ( pos > 0) {
-#   x[0] = 3.4;
-# } 
-#  else {
-#    x[0] = 3.7;
-#  }
-
-# // Print Results
-# i = 0;
-# while(i<5){
-#   print x[i];
-#   i = i + 1;
-#  }
 # """
 
 # --- Lexer machine parameters implementation ---
@@ -504,8 +481,20 @@ def p_unumber_id(p):
     pass
 
 def p_error(p):
-    print(f"Syntax error at line {p.lineno}, position {p.lexpos}, token {p.type}")
-    # print("Syntax error somewhere")
+    if p is None:
+        print("Unexpected end of input. Possibly a missing closing parenthesis or bracket.")
+    else:
+        print(f"Syntax error at line {p.lineno}, position {p.lexpos}, token {p.type}")
+
+    # You can add more specific error messages based on the error type.
+    if p.type == 'ID':
+        print(f"Unexpected identifier '{p.value}'. Check the variable name.")
+    elif p.type == 'INT' or p.type == 'DOUBLE':
+        print(f"Unexpected numeric constant '{p.value}'. Check the expression.")
+    elif p.type == 'RO' or p.type == 'RC':
+        print(f"Unmatched parenthesis or bracket.")
+    else:
+        print("Syntax error somewhere")
 
 # Build the parser
 parser = ply_parser.yacc()
